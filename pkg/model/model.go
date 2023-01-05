@@ -13,76 +13,98 @@ type DefaultQueryParam struct {
 }
 
 // User ...
-type User struct {
-	ID         int64  `json:"id_user"`
-	Username   string `json:"username"`
-	Password   string `json:"password"`
-	Nama_admin string `json:"nama_admin"`
-	IDLevel    int64  `json:"id_level"`
+type MsUser struct {
+	ID          int64       `json:"id"`
+	Nip         string      `json:"nip"`
+	Nama        string      `json:"nama"`
+	No_hp       int64       `json:"no_hp"`
+	Password    string      `json:"password"`
+	Id_struktur int64       `json:"id_struktur"`
+	Aktif       int64       `json:"aktif"`
+	Id_role     int64       `json:"id_role"`
+	Token       string      `json:"token"`
+	Struktur    *MsStruktur `json:"struktur"`
 }
 
-// Tarif ...
-type Tarif struct {
-	ID    int64   `json:"id_tarif"`
-	Daya  int64   `json:"daya"`
-	Tarif float64 `json:"tarifperkwh"`
+// Struktur ...
+type MsStruktur struct {
+	ID            int64  `json:"id"`
+	Nama_struktur string `json:"nama_struktur"`
+	Nip           string `json:"nip"`
+	Parent_id     int64  `json:"parent_id"`
 }
 
-// Tagihan ...
-type Tagihan struct {
-	ID               int64       `json:"id_tagihan"`
-	IDPenggunaan     int64       `json:"id_penggunaan"`
-	IDPelanggan      int64       `json:"id_pelanggan"`
-	Bulan            string      `json:"bulan"`
-	Tahun            int64       `json:"tahun"`
-	Jumlah_meter     int64       `json:"jumlah_meter"`
-	Status           string      `json:"status"`
-	PelangganDetail  *Pelanggan  `json:"pelanggan_detail"`
-	PenggunaanDetail *Penggunaan `json:"penggunaan_detail"`
+// Ruangan ...
+type MsRuangan struct {
+	ID           int64         `json:"id"`
+	Nama_ruangan string        `json:"nama_ruangan"`
+	Id_dc        int64         `json:"id_dc"`
+	DataCenter   *MsDataCenter `json:"data_center"`
 }
 
-// Penggunaan ...
-type Penggunaan struct {
-	ID              int64      `json:"id_penggunaan"`
-	IDPelanggan     int64      `json:"id_pelanggan"`
-	Bulan           string     `json:"bulan"`
-	Tahun           int64      `json:"tahun"`
-	Meter_awal      int64      `json:"meter_awal"`
-	Meter_akhir     int64      `json:"meter_akhir"`
-	Status          string     `json:"status"`
-	PelangganDetail *Pelanggan `json:"pelanggan_detail"`
+// Data Center ...
+type MsDataCenter struct {
+	ID      int64  `json:"id"`
+	Nama_dc string `json:"nama_dc"`
+	Lokasi  int64  `json:"lokasi"`
 }
 
-// Pelanggan ...
-type Pelanggan struct {
-	ID             int64   `json:"id_pelanggan"`
-	Username       string  `json:"username"`
-	Password       string  `json:"password"`
-	Nomor_kwh      int64   `json:"nomor_kwh"`
-	Nama_pelanggan string  `json:"nama_pelanggan"`
-	Alamat         string  `json:"alamat"`
-	IDTarif        float64 `json:"id_tarif"`
-	TarifDetail    *Tarif  `json:"tarif_detail"`
+// Kegiatan ...
+type MsKegiatan struct {
+	ID            int64  `json:"id"`
+	Nama_kegiatan string `json:"nama_kegiatan"`
+	Deskripsi     int64  `json:"deskripsi"`
 }
 
-// Pembayaran ...
-type Pembayaran struct {
-	ID                 int64       `json:"id_pembayaran"`
-	IDTagihan          int64       `json:"id_tagihan"`
-	IDPelanggan        int64       `json:"id_pelanggan"`
-	Tanggal_pembayaran *time.Time  `json:"tanggal_pembayaran"`
-	Bulan_bayar        string      `json:"bulan_bayar"`
-	Biaya_admin        string      `json:"biaya_admin"`
-	Total_bayar        float64     `json:"total_bayar"`
-	IDUser             int64       `json:"id_user"`
-	PelangganDetail    *Pelanggan  `json:"pelanggan_detail"`
-	TagihanDetail      *Tagihan    `json:"tagihan_detail"`
-	PenggunaanDetail   *Penggunaan `json:"penggunaan_detail"`
-	UserDetail         *Pelanggan  `json:"user_detail"`
+// Item ...
+type MsItem struct {
+	ID         int64      `json:"id"`
+	Nama_item  string     `json:"nama_item"`
+	Id_ruangan int64      `json:"id_ruangan"`
+	Deskripsi  int64      `json:"deskripsi"`
+	Parent_id  int64      `json:"parent_id"`
+	Ruangan    *MsRuangan `json:"ruangan"`
 }
 
-// Level ...
-type Level struct {
-	ID         int64  `json:"id_level"`
-	Nama_level string `json:"nama_level"`
+// Piket ...
+type TxPiket struct {
+	ID         int64      `json:"id"`
+	Tanggal    string     `json:"tanggal"`
+	Id_user    *time.Time `json:"id_user"`
+	UserDetail *MsUser    `json:"user_detail"`
+}
+
+// Kegiatan Vendor ...
+type TxKegiatanVendor struct {
+	ID                int64       `json:"id"`
+	Nama_pic          string      `json:"nama_pic"`
+	Nama_vendor       string      `json:"nama_vendor"`
+	Id_piket          int64       `json:"id_piket"`
+	Id_kegiatan       int64       `json:"id_kegiatan"`
+	Tanggal_mulai     *time.Time  `json:"tanggaal_mulai"`
+	Tanggal_selesai   *time.Time  `json:"tanggal_selesai"`
+	Resiko            string      `json:"resiko"`
+	Hasil             string      `json:"hasil"`
+	IdDokumenKegiatan int64       `json:"id_dokumen_kegiatana"`
+	Status            string      `json:"status"`
+	Piket             *TxPiket    `json:"piket"`
+	Kegiatan          *MsKegiatan `json:"kegiatan"`
+}
+
+// Kegiatan Petugas ...
+type TxKegiatanPetugas struct {
+	ID                int64       `json:"id"`
+	Id_piket          int64       `json:"id_piket"`
+	Id_kegiatan       int64       `json:"id_kegiatan"`
+	Deskripsi         string      `json:"resiko"`
+	Hasil             string      `json:"hasil"`
+	IdDokumenKegiatan int64       `json:"id_dokumen_kegiatana"`
+	Piket             *TxPiket    `json:"piket"`
+	Kegiatan          *MsKegiatan `json:"kegiatan"`
+}
+
+// Dokumen Kegiatan ...
+type TxDokumenKegiatan struct {
+	ID               int64  `json:"id"`
+	Dokumen_kegiatan string `json:"dokumen_kegiatan"`
 }

@@ -11,19 +11,19 @@ import (
 
 // TokenMetadata ...
 type TokenMetadata struct {
-	Id_user    int64
-	Username   string
-	Nama_admin string
-	Id_level   int64
+	Id      int64
+	Nip     string
+	Nama    string
+	Id_role int64
 }
 
 // CreateToken ...
-func CreateToken(idUser int64, username, nama_admin string, id_level int64) (string, error) {
+func CreateToken(idUser int64, nip, nama string, id_role int64) (string, error) {
 	claims := jwt.MapClaims{}
-	claims["id_user"] = idUser
-	claims["username"] = username
-	claims["nama_admin"] = nama_admin
-	claims["id_level"] = id_level
+	claims["id"] = idUser
+	claims["nip"] = nip
+	claims["Nama"] = nama
+	claims["id_role"] = id_role
 	claims["iat"] = time.Now().Unix()
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
@@ -71,32 +71,32 @@ func ExtractTokenMetadata(headerToken string) (*TokenMetadata, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		id_user, err := strconv.ParseInt(fmt.Sprintf("%.f", claims["id_user"]), 10, 64)
+		id, err := strconv.ParseInt(fmt.Sprintf("%.f", claims["id"]), 10, 64)
 		if err != nil {
 			// fmt.Println(err.Error())
 			return nil, err
 		}
 
-		username, ok := claims["username"].(string)
+		nip, ok := claims["nip"].(string)
 		if !ok {
 			return nil, err
 		}
 
-		nama_admin, ok := claims["nama_admin"].(string)
+		nama, ok := claims["nama"].(string)
 		if !ok {
 			return nil, err
 		}
 
-		id_level, ok := claims["id_level"].(int64)
+		id_role, ok := claims["id_role"].(int64)
 		if !ok {
 			return nil, err
 		}
 
 		return &TokenMetadata{
-			Id_user:    id_user,
-			Username:   username,
-			Nama_admin: nama_admin,
-			Id_level:   id_level,
+			Id:      id,
+			Nip:     nip,
+			Nama:    nama,
+			Id_role: id_role,
 		}, nil
 	}
 	return nil, err

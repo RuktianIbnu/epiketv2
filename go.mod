@@ -1,4 +1,4 @@
-module sertifikasi_listrik
+module epiketv2
 
 go 1.16
 

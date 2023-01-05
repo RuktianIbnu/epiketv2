@@ -4,16 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 
 	// dh "epiket-api/internal/http/handler/dashboard"
-	gh "sertifikasi_listrik/http/handler/global"
-	level_h "sertifikasi_listrik/http/handler/level"
-	pelanggan_h "sertifikasi_listrik/http/handler/pelanggan"
-	pembayaran_h "sertifikasi_listrik/http/handler/pembayaran"
-	penggunaan_h "sertifikasi_listrik/http/handler/penggunaan"
-	tagihan_h "sertifikasi_listrik/http/handler/tagihan"
-	tarif_h "sertifikasi_listrik/http/handler/tarif"
-	user_h "sertifikasi_listrik/http/handler/user"
-	"sertifikasi_listrik/http/middleware/auth"
-	"sertifikasi_listrik/http/middleware/cors"
+	// gh "epiketv2/http/handler/global"
+	// level_h "epiketv2/http/handler/level"
+	// pelanggan_h "epiketv2/http/handler/pelanggan"
+	// pembayaran_h "epiketv2/http/handler/pembayaran"
+	// penggunaan_h "epiketv2/http/handler/penggunaan"
+	// tagihan_h "epiketv2/http/handler/tagihan"
+	// tarif_h "epiketv2/http/handler/tarif"
+	// user_h "epiketv2/http/handler/user"
+	"epiketv2/http/middleware/auth"
+	"epiketv2/http/middleware/cors"
 )
 
 // Routes ...
@@ -30,19 +30,19 @@ func Routes() *gin.Engine {
 
 	// r.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	globalHandler := gh.NewHandler()
-	levelHendler := level_h.NewHandler()
-	pelangganHendler := pelanggan_h.NewHandler()
-	pembayaranHandler := pembayaran_h.NewHandler()
-	penggunaanHandler := penggunaan_h.NewHandler()
-	tagihanHandler := tagihan_h.NewHandler()
-	tarifHandler := tarif_h.NewHandler()
-	userHandler := user_h.NewHandler()
+	// globalHandler := gh.NewHandler()
+	// levelHendler := level_h.NewHandler()
+	// pelangganHendler := pelanggan_h.NewHandler()
+	// pembayaranHandler := pembayaran_h.NewHandler()
+	// penggunaanHandler := penggunaan_h.NewHandler()
+	// tagihanHandler := tagihan_h.NewHandler()
+	// tarifHandler := tarif_h.NewHandler()
+	// userHandler := user_h.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
-		v1.POST("/login", globalHandler.Login)
-		v1.POST("/register", globalHandler.Register)
+		// v1.POST("/login", globalHandler.Login)
+		// v1.POST("/register", globalHandler.Register)
 		// v1.GET("/test-file", func(c *gin.Context) {
 		// 	log.Println("oke")
 		// 	c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")
@@ -52,52 +52,52 @@ func Routes() *gin.Engine {
 		{
 			// ----------------------------------PASSED CHECK!!!
 
-			resources.POST("/level", levelHendler.Create)
-			resources.GET("/level/:id", levelHendler.GetOneByID)
-			resources.PUT("/level/:id", levelHendler.UpdateOneByID)
-			resources.DELETE("/level/:id", levelHendler.DeleteOneByID)
-			resources.GET("/level", levelHendler.GetAll)
+			resources.POST("/level")
+			// resources.GET("/level/:id", levelHendler.GetOneByID)
+			// resources.PUT("/level/:id", levelHendler.UpdateOneByID)
+			// resources.DELETE("/level/:id", levelHendler.DeleteOneByID)
+			// resources.GET("/level", levelHendler.GetAll)
 
 			// --------------------------------------------------
 
-			resources.POST("/pelanggan", pelangganHendler.Create)
-			resources.GET("/pelanggan/:id", pelangganHendler.GetOneByID)
-			resources.PUT("/pelanggan/:id", pelangganHendler.UpdateOneByID)
-			resources.DELETE("/pelanggan/:id", pelangganHendler.DeleteOneByID)
-			resources.GET("/pelanggan", pelangganHendler.GetAll)
+			// resources.POST("/pelanggan", pelangganHendler.Create)
+			// resources.GET("/pelanggan/:id", pelangganHendler.GetOneByID)
+			// resources.PUT("/pelanggan/:id", pelangganHendler.UpdateOneByID)
+			// resources.DELETE("/pelanggan/:id", pelangganHendler.DeleteOneByID)
+			// resources.GET("/pelanggan", pelangganHendler.GetAll)
 
-			resources.POST("/pembayaran/:id/:idt", pembayaranHandler.Create)
-			resources.GET("/pembayaran/:id", pembayaranHandler.GetOneByID)
-			resources.PUT("/pembayaran/:id", pembayaranHandler.UpdateOneByID)
-			resources.DELETE("/pembayaran/:id", pembayaranHandler.DeleteOneByID)
-			resources.GET("/pembayaran", pembayaranHandler.GetAll)
+			// resources.POST("/pembayaran/:id/:idt", pembayaranHandler.Create)
+			// resources.GET("/pembayaran/:id", pembayaranHandler.GetOneByID)
+			// resources.PUT("/pembayaran/:id", pembayaranHandler.UpdateOneByID)
+			// resources.DELETE("/pembayaran/:id", pembayaranHandler.DeleteOneByID)
+			// resources.GET("/pembayaran", pembayaranHandler.GetAll)
 
-			resources.POST("/penggunaan", penggunaanHandler.Create)
-			resources.GET("/penggunaan/:id", penggunaanHandler.GetOneByID)
-			resources.PUT("/penggunaan/:id", penggunaanHandler.UpdateOneByID)
-			resources.PUT("/penggunaan_status/:id", penggunaanHandler.UpdateStatus)
-			resources.DELETE("/penggunaan/:id", penggunaanHandler.DeleteOneByID)
-			resources.GET("/penggunaan", penggunaanHandler.GetAll)
+			// resources.POST("/penggunaan", penggunaanHandler.Create)
+			// resources.GET("/penggunaan/:id", penggunaanHandler.GetOneByID)
+			// resources.PUT("/penggunaan/:id", penggunaanHandler.UpdateOneByID)
+			// resources.PUT("/penggunaan_status/:id", penggunaanHandler.UpdateStatus)
+			// resources.DELETE("/penggunaan/:id", penggunaanHandler.DeleteOneByID)
+			// resources.GET("/penggunaan", penggunaanHandler.GetAll)
 
-			resources.POST("/tagihan", tagihanHandler.Create)
-			resources.GET("/tagihan/:id", tagihanHandler.GetOneByID)
-			resources.PUT("/tagihan/:id", tagihanHandler.UpdateOneByID)
-			resources.PUT("/tagihan_status/:id", tagihanHandler.UpdateStatus)
-			resources.DELETE("/tagihan/:id", tagihanHandler.DeleteOneByID)
-			resources.GET("/tagihan", tagihanHandler.GetAll)
+			// resources.POST("/tagihan", tagihanHandler.Create)
+			// resources.GET("/tagihan/:id", tagihanHandler.GetOneByID)
+			// resources.PUT("/tagihan/:id", tagihanHandler.UpdateOneByID)
+			// resources.PUT("/tagihan_status/:id", tagihanHandler.UpdateStatus)
+			// resources.DELETE("/tagihan/:id", tagihanHandler.DeleteOneByID)
+			// resources.GET("/tagihan", tagihanHandler.GetAll)
 
-			resources.POST("/tarif", tarifHandler.Create)
-			resources.GET("/tarif/:id", tarifHandler.GetOneByID)
-			resources.PUT("/tarif/:id", tarifHandler.UpdateOneByID)
-			resources.DELETE("/tarif/:id", tarifHandler.DeleteOneByID)
-			resources.GET("/tarif", tarifHandler.GetAll)
+			// resources.POST("/tarif", tarifHandler.Create)
+			// resources.GET("/tarif/:id", tarifHandler.GetOneByID)
+			// resources.PUT("/tarif/:id", tarifHandler.UpdateOneByID)
+			// resources.DELETE("/tarif/:id", tarifHandler.DeleteOneByID)
+			// resources.GET("/tarif", tarifHandler.GetAll)
 
-			resources.POST("/user", userHandler.Create)
-			resources.GET("/user/:id", userHandler.GetOneByID)
-			resources.PUT("/user/:id", userHandler.UpdateOneByID)
-			resources.DELETE("/user/:id", userHandler.DeleteOneByID)
-			resources.GET("/user", userHandler.GetAll)
-
+			// resources.POST("/user", userHandler.Create)
+			// resources.GET("/user/:id", userHandler.GetOneByID)
+			// resources.PUT("/user/:id", userHandler.UpdateOneByID)
+			// resources.DELETE("/user/:id", userHandler.DeleteOneByID)
+			// resources.GET("/user", userHandler.GetAll)
+			// -------------------------------------------------------------------------------------------------- //
 			// 	resources.POST("/user", userHandler.Create)
 			// 	resources.POST("/user/:id", userHandler.ResetPasswordByID)
 
