@@ -19,7 +19,7 @@ type Repository interface {
 	DeleteOneByID(id int64) (int64, error)
 	getTotalCount() (totalEntries int)
 
-	Register(nip string, password string, nama string, id_role int64) (int64, error)
+	Register(nip string, password string, nama string, no_hp, id_struktur, aktif, id_role int64) (int64, error)
 }
 
 type repository struct {
@@ -33,13 +33,13 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) Register(nip string, password string, nama string, id_role int64) (int64, error) {
+func (m *repository) Register(nip string, password string, nama string, no_hp, id_struktur, aktif, id_role int64) (int64, error) {
 	tx, err := m.DB.Begin()
 	if err != nil {
 		return -1, err
 	}
 
-	res, err := tx.Exec(`INSERT INTO ms_user(nip, password, nama, id_role) VALUES(?, ?, ?, ?)`, nip, password, nama, id_role)
+	res, err := tx.Exec(`INSERT INTO ms_users(nip, nama, no_hp, password, id_struktur, aktif, id_role) VALUES(?, ?, ?, ?, ?, ?, ?)`, nip, nama, no_hp, password, id_struktur, aktif, id_role)
 	if err != nil {
 		tx.Rollback()
 		return -1, err
@@ -50,7 +50,7 @@ func (m *repository) Register(nip string, password string, nama string, id_role 
 }
 
 func (m *repository) getTotalCount() (totalEntries int) {
-	if err := m.DB.QueryRow("SELECT COUNT(*) FROM ms_user").Scan(&totalEntries); err != nil {
+	if err := m.DB.QueryRow("SELECT COUNT(*) FROM ms_users").Scan(&totalEntries); err != nil {
 		return -1
 	}
 
@@ -58,13 +58,16 @@ func (m *repository) getTotalCount() (totalEntries int) {
 }
 
 func (m *repository) Create(data *model.MsUser) (int64, error) {
-	query := `INSERT INTO ms_user(
-		nip, password, nama, id_role) VALUES(?,?,?,?)`
+	query := `INSERT INTO ms_users(
+		nip, nama, no_hp, password, id_struktur, aktif, id_role) VALUES(?,?,?,?,?,?,?)`
 
 	res, err := m.DB.Exec(query,
 		&data.Nip,
-		&data.Password,
 		&data.Nama,
+		&data.No_hp,
+		&data.Password,
+		&data.Id_struktur,
+		&data.Aktif,
 		&data.Id_role,
 	)
 
@@ -83,7 +86,7 @@ func (m *repository) Create(data *model.MsUser) (int64, error) {
 func (m *repository) checkNipExist(username string) (exist bool) {
 	query := `SELECT 
 	nip
-	FROM ms_user 
+	FROM ms_users 
 	WHERE nip = ?`
 
 	var e string
@@ -102,12 +105,16 @@ func (m *repository) checkNipExist(username string) (exist bool) {
 }
 
 func (m *repository) UpdateOneByID(data *model.MsUser) (int64, error) {
-	query := `UPDATE ms_user set nip=?, nama=?, id_role=?
+	query := `UPDATE ms_users set nip=?, nama=?, no_hp=?, password=?, id_struktur=?, aktif=?, id_role=?
 	WHERE id = ?`
 
 	res, err := m.DB.Exec(query,
 		&data.Nip,
 		&data.Nama,
+		&data.No_hp,
+		&data.Password,
+		&data.Id_struktur,
+		&data.Aktif,
 		&data.Id_role,
 		&data.ID,
 	)
@@ -125,7 +132,7 @@ func (m *repository) UpdateOneByID(data *model.MsUser) (int64, error) {
 }
 
 func (m *repository) DeleteOneByID(id int64) (int64, error) {
-	query := `DELETE FROM ms_user WHERE id = ?`
+	query := `DELETE FROM ms_users WHERE id = ?`
 
 	res, err := m.DB.Exec(query, id)
 	if err != nil {
@@ -142,8 +149,8 @@ func (m *repository) DeleteOneByID(id int64) (int64, error) {
 
 func (m *repository) GetOneByID(id int64) (*model.MsUser, error) {
 	query := `SELECT
-	id, nip, nama, id_role
-	FROM ms_user
+	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
+	FROM ms_users
 	WHERE nip = ?`
 
 	data := &model.MsUser{}
@@ -151,6 +158,10 @@ func (m *repository) GetOneByID(id int64) (*model.MsUser, error) {
 		&data.ID,
 		&data.Nip,
 		&data.Nama,
+		&data.No_hp,
+		&data.Password,
+		&data.Id_struktur,
+		&data.Aktif,
 		&data.Id_role,
 	); err != nil {
 		return nil, err
@@ -165,8 +176,8 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 	)
 
 	query := `SELECT
-	id, nip, nama, id_role
-	FROM ms_user
+	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
+	FROM ms_users
 	WHERE nip = ?`
 
 	rows, err := m.DB.Query(query, id)
@@ -184,6 +195,10 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 			&data.ID,
 			&data.Nip,
 			&data.Nama,
+			&data.No_hp,
+			&data.Password,
+			&data.Id_struktur,
+			&data.Aktif,
 			&data.Id_role,
 		); err != nil {
 			return nil, err
@@ -200,7 +215,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 		list = make([]*model.MsUser, 0)
 	)
 
-	query := `SELECT id, nip, nama, id_role FROM ms_user`
+	query := `SELECT id, nip, nama, no_hp, password, id_struktur, aktif, id_role FROM ms_users`
 
 	if dqp.Search != "" {
 		query += ` WHERE MATCH(nip, nama) AGAINST(:search IN NATURAL LANGUAGE MODE)`
@@ -222,6 +237,10 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 			&data.ID,
 			&data.Nip,
 			&data.Nama,
+			&data.No_hp,
+			&data.Password,
+			&data.Id_struktur,
+			&data.Aktif,
 			&data.Id_role,
 		); err != nil {
 			return nil, -1, err
@@ -235,12 +254,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 
 func (m *repository) GetUserMetadataByNip(nip string) (*model.MsUser, error) {
 	query := `SELECT
-	id,
-	nip,
-	password,
-	nama,
-	id_role
-	FROM ms_user 
+	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
+	FROM ms_users 
 	WHERE nip = ?`
 
 	data := &model.MsUser{}
@@ -248,8 +263,11 @@ func (m *repository) GetUserMetadataByNip(nip string) (*model.MsUser, error) {
 	if err := m.DB.QueryRow(query, nip).Scan(
 		&data.ID,
 		&data.Nip,
-		&data.Password,
 		&data.Nama,
+		&data.No_hp,
+		&data.Password,
+		&data.Id_struktur,
+		&data.Aktif,
 		&data.Id_role,
 	); err != nil {
 		return nil, err
