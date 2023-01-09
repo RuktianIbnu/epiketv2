@@ -14,6 +14,8 @@ type Usecase interface {
 	UpdateOneByID(data *model.MsUser) (int64, error)
 	DeleteOneByID(id int64) (int64, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
+	CheckNIPExist(nip string) bool
+	Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error)
 }
 
 type usecase struct {
@@ -29,6 +31,14 @@ func NewUsecase() Usecase {
 
 func (m *usecase) Create(data *model.MsUser) (int64, error) {
 	return m.user.Create(data)
+}
+
+func (m *usecase) Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error) {
+	return m.user.Register(nip, password, nama, no_hp, id_struktur, aktif, id_role)
+}
+
+func (m *usecase) CheckNIPExist(nip string) bool {
+	return m.user.CheckNipExist(nip)
 }
 
 func (m *usecase) UpdateOneByID(data *model.MsUser) (int64, error) {

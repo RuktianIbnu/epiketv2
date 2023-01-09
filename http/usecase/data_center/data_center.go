@@ -9,7 +9,7 @@ import (
 
 // Usecase ...
 type Usecase interface {
-	Create(data *model.MsDataCenter) (int64, error)
+	Create(data *model.MsDataCenter) error
 	GetOneByID(id int64) (*model.MsDataCenter, error)
 	UpdateOneByID(data *model.MsDataCenter) (int64, error)
 	DeleteOneByID(id int64) (int64, error)
@@ -27,8 +27,14 @@ func NewUsecase() Usecase {
 	}
 }
 
-func (m *usecase) Create(data *model.MsDataCenter) (int64, error) {
-	return m.datacenterRepo.Create(data)
+func (m *usecase) Create(data *model.MsDataCenter) error {
+	lastID, err := m.datacenterRepo.Create(data)
+	if err != nil {
+		return err
+	}
+	data.ID = lastID
+
+	return nil
 }
 
 func (m *usecase) UpdateOneByID(data *model.MsDataCenter) (int64, error) {

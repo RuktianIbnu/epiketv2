@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	// dh "epiket-api/internal/http/handler/dashboard"
+	uh "epiketv2/http/handler/user"
 	// gh "epiketv2/http/handler/global"
 	// level_h "epiketv2/http/handler/level"
 	// pelanggan_h "epiketv2/http/handler/pelanggan"
@@ -30,7 +30,7 @@ func Routes() *gin.Engine {
 
 	// r.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	// globalHandler := gh.NewHandler()
+	userHandler := uh.NewHandler()
 	// levelHendler := level_h.NewHandler()
 	// pelangganHendler := pelanggan_h.NewHandler()
 	// pembayaranHandler := pembayaran_h.NewHandler()
@@ -42,7 +42,7 @@ func Routes() *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		// v1.POST("/login", globalHandler.Login)
-		// v1.POST("/register", globalHandler.Register)
+		v1.POST("/register", userHandler.Register)
 		// v1.GET("/test-file", func(c *gin.Context) {
 		// 	log.Println("oke")
 		// 	c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")

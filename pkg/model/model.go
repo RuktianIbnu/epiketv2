@@ -17,7 +17,7 @@ type MsUser struct {
 	ID          int64       `json:"id"`
 	Nip         string      `json:"nip"`
 	Nama        string      `json:"nama"`
-	No_hp       int64       `json:"no_hp"`
+	No_hp       string      `json:"no_hp"`
 	Password    string      `json:"password"`
 	Id_struktur int64       `json:"id_struktur"`
 	Aktif       int64       `json:"aktif"`
