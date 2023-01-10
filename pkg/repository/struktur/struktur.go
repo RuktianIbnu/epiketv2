@@ -148,7 +148,7 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsStruktur, error) {
 	query := `SELECT
 	id, nama_struktur, nip, parent_id
 	FROM ms_struktur
-	WHERE nip = ?`
+	WHERE id = ?`
 
 	rows, err := m.DB.Query(query, id)
 	if err != nil {

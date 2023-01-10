@@ -301,25 +301,25 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 }
 
 func (m *repository) GetUserMetadataByNip(nip string) (*model.MsUser, error) {
+	dataUser := &model.MsUser{}
+
 	query := `SELECT
 	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
 	FROM ms_users 
 	WHERE nip = ?`
 
-	data := &model.MsUser{}
-
 	if err := m.DB.QueryRow(query, nip).Scan(
-		&data.ID,
-		&data.Nip,
-		&data.Nama,
-		&data.No_hp,
-		&data.Password,
-		&data.Id_struktur,
-		&data.Aktif,
-		&data.Id_role,
+		&dataUser.ID,
+		&dataUser.Nip,
+		&dataUser.Nama,
+		&dataUser.No_hp,
+		&dataUser.Password,
+		&dataUser.Id_struktur,
+		&dataUser.Aktif,
+		&dataUser.Id_role,
 	); err != nil {
 		return nil, err
 	}
 
-	return data, nil
+	return dataUser, nil
 }

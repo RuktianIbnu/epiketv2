@@ -55,13 +55,13 @@ func (m *handler) Login(c *gin.Context) {
 		return
 	}
 
-	data, err := m.userUsecase.GetOneByNip(loginData.Nip)
+	metaDataUser, err := m.userUsecase.GetOneByNip(loginData.Nip)
 	if err != nil {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return
 	}
 
-	c.JSON(resp.Format(http.StatusOK, nil, gin.H{"token": tempToken, "user_metadata": data}))
+	c.JSON(resp.Format(http.StatusOK, nil, gin.H{"token": tempToken, "user_metadata": metaDataUser}))
 }
 
 func (m *handler) Register(c *gin.Context) {

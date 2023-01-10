@@ -4,6 +4,7 @@ import (
 	"epiketv2/pkg/helper/bcrypt"
 	"epiketv2/pkg/helper/jwt"
 	"epiketv2/pkg/model"
+	sr "epiketv2/pkg/repository/struktur"
 	ur "epiketv2/pkg/repository/user"
 	"errors"
 	"fmt"
@@ -23,7 +24,8 @@ type Usecase interface {
 }
 
 type usecase struct {
-	user ur.Repository
+	user     ur.Repository
+	struktur sr.Repository
 }
 
 const (
@@ -38,6 +40,7 @@ const (
 func NewUsecase() Usecase {
 	return &usecase{
 		ur.NewRepository(),
+		sr.NewRepository(),
 	}
 }
 
@@ -96,7 +99,19 @@ func (m *usecase) GetOneByID(id int64) (*model.MsUser, error) {
 }
 
 func (m *usecase) GetOneByNip(nip string) (*model.MsUser, error) {
-	return m.user.GetOneByNip(nip)
+	dataUser, err := m.user.GetOneByNip(nip)
+	if err != nil {
+		return nil, err
+	}
+
+	dataStruktur, err := m.struktur.GetOneByID(dataUser.Id_struktur)
+	if err != nil {
+		return nil, err
+	}
+
+	dataUser.Struktur = dataStruktur
+
+	return dataUser, nil
 }
 
 func (m *usecase) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error) {
