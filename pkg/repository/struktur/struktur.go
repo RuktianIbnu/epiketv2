@@ -9,7 +9,7 @@ import (
 
 // Repository ...
 type Repository interface {
-	checkNipExist(nip string) (exist bool)
+	CheckNamaIsExist(namastruktur string) (exist bool)
 	Create(data *model.MsStruktur) (int64, error)
 	UpdateOneByID(data *model.MsStruktur) (int64, error)
 	GetUserMetadataById(id int64) (*model.MsStruktur, error)
@@ -61,21 +61,21 @@ func (m *repository) Create(data *model.MsStruktur) (int64, error) {
 	return lastID, nil
 }
 
-func (m *repository) checkNipExist(nip string) (exist bool) {
+func (m *repository) CheckNamaIsExist(namastruktur string) (exist bool) {
 	query := `SELECT 
-	nip
+	count(*)
 	FROM ms_struktur 
-	WHERE nip = ?`
+	WHERE nama_struktur = ?`
 
-	var e string
+	var e int64
 
-	if err := m.DB.QueryRow(query, nip).Scan(
+	if err := m.DB.QueryRow(query, namastruktur).Scan(
 		&e,
 	); err != nil {
 		return false
 	}
 
-	if e != "" {
+	if e == 0 {
 		exist = true
 	}
 

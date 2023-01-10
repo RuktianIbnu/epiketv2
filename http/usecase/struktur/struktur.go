@@ -3,8 +3,8 @@ package struktur
 import (
 	"epiketv2/pkg/model"
 	sr "epiketv2/pkg/repository/struktur"
-
 	"errors"
+	"fmt"
 )
 
 // Usecase ...
@@ -28,6 +28,13 @@ func NewUsecase() Usecase {
 }
 
 func (m *usecase) Create(data *model.MsStruktur) (int64, error) {
+
+	namaStrukturIsActive := m.struktur.CheckNamaIsExist(data.Nama_struktur)
+	if namaStrukturIsActive != true {
+		return 500, fmt.Errorf("Nama Sub Direktorat Sudah Ada")
+	}
+	println(namaStrukturIsActive)
+
 	return m.struktur.Create(data)
 }
 

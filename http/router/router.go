@@ -45,7 +45,6 @@ func Routes() *gin.Engine {
 	{
 		v1.POST("/login", userHandler.Login)
 		v1.POST("/register", userHandler.Register)
-		v1.POST("/struktur", strukturHendler.Create)
 		// v1.GET("/test-file", func(c *gin.Context) {
 		// 	log.Println("oke")
 		// 	c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")
@@ -55,19 +54,19 @@ func Routes() *gin.Engine {
 		{
 			// ----------------------------------PASSED CHECK!!!
 
-			resources.POST("/level")
-			// resources.GET("/level/:id", levelHendler.GetOneByID)
-			// resources.PUT("/level/:id", levelHendler.UpdateOneByID)
-			// resources.DELETE("/level/:id", levelHendler.DeleteOneByID)
-			// resources.GET("/level", levelHendler.GetAll)
+			resources.POST("/struktur", strukturHendler.Create)
+			resources.GET("/struktur/:id", strukturHendler.GetOneByID)
+			resources.PUT("/struktur/:id", strukturHendler.UpdateOneByID)
+			resources.DELETE("/struktur/:id", strukturHendler.DeleteOneByID)
+			resources.GET("/struktur", strukturHendler.GetAll)
 
 			// --------------------------------------------------
 
-			// resources.POST("/pelanggan", pelangganHendler.Create)
-			// resources.GET("/pelanggan/:id", pelangganHendler.GetOneByID)
-			// resources.PUT("/pelanggan/:id", pelangganHendler.UpdateOneByID)
-			// resources.DELETE("/pelanggan/:id", pelangganHendler.DeleteOneByID)
-			// resources.GET("/pelanggan", pelangganHendler.GetAll)
+			resources.POST("/user", userHandler.Create)
+			resources.GET("/user/:id", userHandler.GetOneByID)
+			resources.PUT("/user/:id", userHandler.UpdateOneByID)
+			resources.DELETE("/user/:id", userHandler.DeleteOneByID)
+			resources.GET("/user", userHandler.GetAll)
 
 			// resources.POST("/pembayaran/:id/:idt", pembayaranHandler.Create)
 			// resources.GET("/pembayaran/:id", pembayaranHandler.GetOneByID)

@@ -124,8 +124,6 @@ func (m *repository) CheckUserIsActive(nip string) (exist bool) {
 		exist = true
 	}
 
-	println(e)
-
 	return
 }
 
