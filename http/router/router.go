@@ -41,7 +41,7 @@ func Routes() *gin.Engine {
 
 	v1 := r.Group("/v1")
 	{
-		// v1.POST("/login", globalHandler.Login)
+		v1.POST("/login", userHandler.Login)
 		v1.POST("/register", userHandler.Register)
 		// v1.GET("/test-file", func(c *gin.Context) {
 		// 	log.Println("oke")

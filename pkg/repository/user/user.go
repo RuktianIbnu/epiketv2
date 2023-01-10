@@ -10,6 +10,7 @@ import (
 // Repository ...
 type Repository interface {
 	CheckNipExist(nip string) (exist bool)
+	CheckUserIsActive(nip string) (exist bool)
 	Create(data *model.MsUser) (int64, error)
 	UpdateOneByID(data *model.MsUser) (int64, error)
 	GetUserMetadataByNip(nip string) (*model.MsUser, error)
@@ -19,7 +20,7 @@ type Repository interface {
 	DeleteOneByID(id int64) (int64, error)
 	getTotalCount() (totalEntries int)
 
-	Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error)
+	Register(nip, nama, no_hp, password string, id_struktur, aktif, id_role int64) (int64, error)
 }
 
 type repository struct {
@@ -33,7 +34,7 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error) {
+func (m *repository) Register(nip, nama, no_hp, password string, id_struktur, aktif, id_role int64) (int64, error) {
 	tx, err := m.DB.Begin()
 	if err != nil {
 		return -1, err
@@ -100,6 +101,29 @@ func (m *repository) CheckNipExist(nip string) (exist bool) {
 	if e != "" {
 		exist = true
 	}
+
+	return
+}
+
+func (m *repository) CheckUserIsActive(nip string) (exist bool) {
+	query := `SELECT 
+	aktif
+	FROM ms_users 
+	WHERE nip = ?`
+
+	var e int
+
+	if err := m.DB.QueryRow(query, nip).Scan(
+		&e,
+	); err != nil {
+		return false
+	}
+
+	if e == 1 {
+		exist = true
+	}
+
+	println(e)
 
 	return
 }

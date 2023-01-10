@@ -20,6 +20,7 @@ type Handler interface {
 	DeleteOneByID(c *gin.Context)
 	GetAll(c *gin.Context)
 	Register(c *gin.Context)
+	Login(c *gin.Context)
 }
 
 type handler struct {
@@ -31,6 +32,30 @@ func NewHandler() Handler {
 	return &handler{
 		uu.NewUsecase(),
 	}
+}
+
+func (m *handler) Login(c *gin.Context) {
+	type login struct {
+		Nip      string `json:"nip" binding:"required"`
+		Password string `json:"password" binding:"required,min=8"`
+	}
+
+	var (
+		loginData login
+	)
+
+	if err := c.ShouldBindJSON(&loginData); err != nil {
+		c.JSON(resp.Format(http.StatusBadRequest, err))
+		return
+	}
+
+	tempToken, err := m.userUsecase.Login(loginData.Nip, loginData.Password)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, gin.H{"temp_token": tempToken}))
 }
 
 func (m *handler) Register(c *gin.Context) {

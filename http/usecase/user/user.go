@@ -1,10 +1,12 @@
 package user
 
 import (
+	"epiketv2/pkg/helper/bcrypt"
+	"epiketv2/pkg/helper/jwt"
 	"epiketv2/pkg/model"
 	ur "epiketv2/pkg/repository/user"
-
 	"errors"
+	"fmt"
 )
 
 // Usecase ...
@@ -15,12 +17,21 @@ type Usecase interface {
 	DeleteOneByID(id int64) (int64, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
 	CheckNIPExist(nip string) bool
-	Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error)
+	Register(nip string, nama, no_hp, password string, id_struktur, aktif, id_role int64) (int64, error)
+	Login(nip, password string) (string, error)
 }
 
 type usecase struct {
 	user ur.Repository
 }
+
+const (
+	// ActionLogin ...
+	ActionLogin = "login"
+
+	// RoleRespondent ...
+	RoleRespondent = "respondent"
+)
 
 // NewUsecase ...
 func NewUsecase() Usecase {
@@ -33,8 +44,36 @@ func (m *usecase) Create(data *model.MsUser) (int64, error) {
 	return m.user.Create(data)
 }
 
-func (m *usecase) Register(nip string, password string, nama, no_hp string, id_struktur, aktif, id_role int64) (int64, error) {
-	return m.user.Register(nip, password, nama, no_hp, id_struktur, aktif, id_role)
+func (m *usecase) Login(nip, password string) (string, error) {
+	userMetadata, err := m.user.GetUserMetadataByNip(nip)
+	if err != nil {
+		return "", errors.New("NIP not registered")
+	}
+
+	userIsActive := m.user.CheckUserIsActive(nip)
+	if !userIsActive {
+		return "", fmt.Errorf("please activate your account")
+	}
+
+	if !bcrypt.Compare(password, userMetadata.Password) {
+		return "", fmt.Errorf("incorrect email or password")
+	}
+
+	tempToken, err := jwt.CreateToken(userMetadata.ID, userMetadata.Nip, userMetadata.Nama, userMetadata.Id_role)
+	if err != nil {
+		return "", fmt.Errorf("failed generate temporary token %s", err.Error())
+	}
+
+	return tempToken, nil
+}
+
+func (m *usecase) Register(nip string, nama, no_hp, password string, id_struktur, aktif, id_role int64) (int64, error) {
+	hashedPwd, err := bcrypt.Hash(password)
+	if err != nil {
+		return 500, err
+	}
+
+	return m.user.Register(nip, nama, no_hp, hashedPwd, id_struktur, aktif, id_role)
 }
 
 func (m *usecase) CheckNIPExist(nip string) bool {
