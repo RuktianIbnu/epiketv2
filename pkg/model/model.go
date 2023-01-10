@@ -22,7 +22,6 @@ type MsUser struct {
 	Id_struktur int64       `json:"id_struktur"`
 	Aktif       int64       `json:"aktif"`
 	Id_role     int64       `json:"id_role"`
-	Token       string      `json:"token"`
 	Struktur    *MsStruktur `json:"struktur"`
 }
 

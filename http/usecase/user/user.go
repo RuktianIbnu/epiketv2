@@ -13,6 +13,7 @@ import (
 type Usecase interface {
 	Create(data *model.MsUser) (int64, error)
 	GetOneByID(id int64) (*model.MsUser, error)
+	GetOneByNip(nip string) (*model.MsUser, error)
 	UpdateOneByID(data *model.MsUser) (int64, error)
 	DeleteOneByID(id int64) (int64, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
@@ -92,6 +93,10 @@ func (m *usecase) UpdateOneByID(data *model.MsUser) (int64, error) {
 
 func (m *usecase) GetOneByID(id int64) (*model.MsUser, error) {
 	return m.user.GetOneByID(id)
+}
+
+func (m *usecase) GetOneByNip(nip string) (*model.MsUser, error) {
+	return m.user.GetOneByNip(nip)
 }
 
 func (m *usecase) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error) {

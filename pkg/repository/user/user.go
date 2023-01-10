@@ -15,6 +15,7 @@ type Repository interface {
 	UpdateOneByID(data *model.MsUser) (int64, error)
 	GetUserMetadataByNip(nip string) (*model.MsUser, error)
 	GetOneByID(id int64) (*model.MsUser, error)
+	GetOneByNip(id string) (*model.MsUser, error)
 	GetAllByID(id int64) ([]*model.MsUser, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
 	DeleteOneByID(id int64) (int64, error)
@@ -175,10 +176,33 @@ func (m *repository) GetOneByID(id int64) (*model.MsUser, error) {
 	query := `SELECT
 	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
 	FROM ms_users
-	WHERE nip = ?`
+	WHERE id = ?`
 
 	data := &model.MsUser{}
 	if err := m.DB.QueryRow(query, id).Scan(
+		&data.ID,
+		&data.Nip,
+		&data.Nama,
+		&data.No_hp,
+		&data.Password,
+		&data.Id_struktur,
+		&data.Aktif,
+		&data.Id_role,
+	); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (m *repository) GetOneByNip(nip string) (*model.MsUser, error) {
+	query := `SELECT
+	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
+	FROM ms_users
+	WHERE nip = ?`
+
+	data := &model.MsUser{}
+	if err := m.DB.QueryRow(query, nip).Scan(
 		&data.ID,
 		&data.Nip,
 		&data.Nama,
