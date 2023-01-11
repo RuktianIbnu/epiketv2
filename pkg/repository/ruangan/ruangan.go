@@ -17,7 +17,7 @@ type Repository interface {
 	GetAllByID(id int64) ([]*model.MsRuangan, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, int, error)
 	DeleteOneByID(id int64) (int64, error)
-	getTotalCount() (totalEntries int)
+	GetTotalCount() (totalEntries int)
 }
 
 type repository struct {
@@ -31,7 +31,7 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) getTotalCount() (totalEntries int) {
+func (m *repository) GetTotalCount() (totalEntries int) {
 	if err := m.DB.QueryRow("SELECT COUNT(*) FROM ms_ruangan").Scan(&totalEntries); err != nil {
 		return -1
 	}
@@ -206,7 +206,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, i
 		list = append(list, &data)
 	}
 
-	return list, m.getTotalCount(), nil
+	return list, m.GetTotalCount(), nil
 }
 
 func (m *repository) GetUserMetadataById(id int64) (*model.MsRuangan, error) {

@@ -3,17 +3,12 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	sh "epiketv2/http/handler/struktur"
-	uh "epiketv2/http/handler/user"
-
-	// gh "epiketv2/http/handler/global"
-	// level_h "epiketv2/http/handler/level"
-	// pelanggan_h "epiketv2/http/handler/pelanggan"
-	// pembayaran_h "epiketv2/http/handler/pembayaran"
-	// penggunaan_h "epiketv2/http/handler/penggunaan"
-	// tagihan_h "epiketv2/http/handler/tagihan"
-	// tarif_h "epiketv2/http/handler/tarif"
-	// user_h "epiketv2/http/handler/user"
+	dcHandler "epiketv2/http/handler/data_center"
+	itemHandler "epiketv2/http/handler/item"
+	kegiatanHandler "epiketv2/http/handler/kegiatan"
+	ruanganHandler "epiketv2/http/handler/ruangan"
+	strukturHandler "epiketv2/http/handler/struktur"
+	userHandler "epiketv2/http/handler/user"
 	"epiketv2/http/middleware/auth"
 	"epiketv2/http/middleware/cors"
 )
@@ -30,16 +25,12 @@ func Routes() *gin.Engine {
 		})
 	})
 
-	// r.MaxMultipartMemory = 8 << 20 // 8 MiB
-
-	userHandler := uh.NewHandler()
-	strukturHendler := sh.NewHandler()
-	// pelangganHendler := pelanggan_h.NewHandler()
-	// pembayaranHandler := pembayaran_h.NewHandler()
-	// penggunaanHandler := penggunaan_h.NewHandler()
-	// tagihanHandler := tagihan_h.NewHandler()
-	// tarifHandler := tarif_h.NewHandler()
-	// userHandler := user_h.NewHandler()
+	userHandler := userHandler.NewHandler()
+	strukturHendler := strukturHandler.NewHandler()
+	dcHendler := dcHandler.NewHandler()
+	kegiatanHandler := kegiatanHandler.NewHandler()
+	itemHandler := itemHandler.NewHandler()
+	ruanganHandler := ruanganHandler.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -52,7 +43,6 @@ func Routes() *gin.Engine {
 
 		resources := v1.Group("/resources").Use(auth.Middleware())
 		{
-			// ----------------------------------PASSED CHECK!!!
 
 			resources.POST("/struktur", strukturHendler.Create)
 			resources.GET("/struktur/:id", strukturHendler.GetOneByID)
@@ -60,128 +50,35 @@ func Routes() *gin.Engine {
 			resources.DELETE("/struktur/:id", strukturHendler.DeleteOneByID)
 			resources.GET("/struktur", strukturHendler.GetAll)
 
-			// --------------------------------------------------
-
 			resources.POST("/user", userHandler.Create)
 			resources.GET("/user/:id", userHandler.GetOneByID)
 			resources.PUT("/user/:id", userHandler.UpdateOneByID)
 			resources.DELETE("/user/:id", userHandler.DeleteOneByID)
 			resources.GET("/user", userHandler.GetAll)
 
-			// resources.POST("/pembayaran/:id/:idt", pembayaranHandler.Create)
-			// resources.GET("/pembayaran/:id", pembayaranHandler.GetOneByID)
-			// resources.PUT("/pembayaran/:id", pembayaranHandler.UpdateOneByID)
-			// resources.DELETE("/pembayaran/:id", pembayaranHandler.DeleteOneByID)
-			// resources.GET("/pembayaran", pembayaranHandler.GetAll)
+			resources.POST("/item", itemHandler.Create)
+			resources.GET("/item/:id", itemHandler.GetOneByID)
+			resources.PUT("/item/:id", itemHandler.UpdateOneByID)
+			resources.DELETE("/item/:id", itemHandler.DeleteOneByID)
+			resources.GET("/item", itemHandler.GetAll)
 
-			// resources.POST("/penggunaan", penggunaanHandler.Create)
-			// resources.GET("/penggunaan/:id", penggunaanHandler.GetOneByID)
-			// resources.PUT("/penggunaan/:id", penggunaanHandler.UpdateOneByID)
-			// resources.PUT("/penggunaan_status/:id", penggunaanHandler.UpdateStatus)
-			// resources.DELETE("/penggunaan/:id", penggunaanHandler.DeleteOneByID)
-			// resources.GET("/penggunaan", penggunaanHandler.GetAll)
+			resources.POST("/kegiatan", kegiatanHandler.Create)
+			resources.GET("/kegiatan/:id", kegiatanHandler.GetOneByID)
+			resources.PUT("/kegiatan/:id", kegiatanHandler.UpdateOneByID)
+			resources.DELETE("/kegiatan/:id", kegiatanHandler.DeleteOneByID)
+			resources.GET("/kegiatan", kegiatanHandler.GetAll)
 
-			// resources.POST("/tagihan", tagihanHandler.Create)
-			// resources.GET("/tagihan/:id", tagihanHandler.GetOneByID)
-			// resources.PUT("/tagihan/:id", tagihanHandler.UpdateOneByID)
-			// resources.PUT("/tagihan_status/:id", tagihanHandler.UpdateStatus)
-			// resources.DELETE("/tagihan/:id", tagihanHandler.DeleteOneByID)
-			// resources.GET("/tagihan", tagihanHandler.GetAll)
+			resources.POST("/data_center", dcHendler.Create)
+			resources.GET("/data_center/:id", dcHendler.GetOneByID)
+			resources.PUT("/data_center/:id", dcHendler.UpdateOneByID)
+			resources.DELETE("/data_center/:id", dcHendler.DeleteOneByID)
+			resources.GET("/data_center", dcHendler.GetAll)
 
-			// resources.POST("/tarif", tarifHandler.Create)
-			// resources.GET("/tarif/:id", tarifHandler.GetOneByID)
-			// resources.PUT("/tarif/:id", tarifHandler.UpdateOneByID)
-			// resources.DELETE("/tarif/:id", tarifHandler.DeleteOneByID)
-			// resources.GET("/tarif", tarifHandler.GetAll)
-
-			// resources.POST("/user", userHandler.Create)
-			// resources.GET("/user/:id", userHandler.GetOneByID)
-			// resources.PUT("/user/:id", userHandler.UpdateOneByID)
-			// resources.DELETE("/user/:id", userHandler.DeleteOneByID)
-			// resources.GET("/user", userHandler.GetAll)
-			// -------------------------------------------------------------------------------------------------- //
-			// 	resources.POST("/user", userHandler.Create)
-			// 	resources.POST("/user/:id", userHandler.ResetPasswordByID)
-
-			// 	resources.GET("/instansi-parent/:id", instansiHandler.GetOneByParentID)
-
-			// 	// resources.GET("/user/:id", userHandler.GetOneByID)
-			// 	// resources.PUT("/user/:id", userHandler.UpdateOneByID)
-			// 	// resources.DELETE("/user/:id", userHandler.DeleteOneByID)
-			// 	// resources.GET("/user", userHandler.GetAll)
-
-			// 	resources.POST("/kuesioner", kuesionerHandler.Create)
-			// 	resources.GET("/kuesioner/:id", kuesionerHandler.GetOneByID)
-			// 	resources.PUT("/kuesioner/:id", kuesionerHandler.UpdateOneByID)
-			// 	resources.DELETE("/kuesioner/:id", kuesionerHandler.DeleteOneByID)
-			// 	resources.GET("/kuesioner", kuesionerHandler.GetAll)
-			// 	resources.GET("/kuesioner/:id/poin-kuesioner/:id_poin_kuesioner", kuesionerHandler.GetOneByIDWithDetails)
-
-			// 	resources.POST("/poin-kuesioner", poinKuesionerHandler.Create)
-			// 	resources.GET("/poin-kuesioner/:id", poinKuesionerHandler.GetOneByID)
-			// 	resources.PUT("/poin-kuesioner/:id", poinKuesionerHandler.UpdateOneByID)
-			// 	resources.DELETE("/poin-kuesioner/:id", poinKuesionerHandler.DeleteOneByID)
-			// 	// resources.GET("/poin-kuesioner", poinKuesionerHandler.GetAll)
-			// 	resources.PUT("/poin-kuesioner-with-item/:id", poinKuesionerHandler.UpdateOneWithItemByID)
-
-			// 	resources.POST("/poin-kuesioner-item", poinKuesionerItemHandler.Create)
-			// 	resources.GET("/poin-kuesioner-item/:id", poinKuesionerItemHandler.GetOneByID)
-			// 	resources.PUT("/poin-kuesioner-item/:id", poinKuesionerItemHandler.UpdateOneByID)
-			// 	resources.DELETE("/poin-kuesioner-item/:id", poinKuesionerItemHandler.DeleteOneByID)
-			// 	resources.GET("/poin-kuesioner-item", poinKuesionerItemHandler.GetAll)
-
-			// 	resources.POST("/survey", surveyHandler.Create)
-			// 	resources.GET("/survey/:id", surveyHandler.GetOneByID)
-			// 	resources.PUT("/survey/:id", surveyHandler.UpdateOneByID)
-			// 	resources.DELETE("/survey/:id", surveyHandler.DeleteOneByID)
-			// 	resources.GET("/survey", surveyHandler.GetAll)
-			// 	resources.GET("/survey-history", surveyHandler.GetHistoryByID)
-
-			// 	resources.POST("/survey-item", surveyItemHandler.Create)
-			// 	resources.GET("/survey-item/:id", surveyItemHandler.GetOneByID)
-			// 	resources.PUT("/survey-item/:id", surveyItemHandler.UpdateOneByID)
-			// 	resources.DELETE("/survey-item/:id", surveyItemHandler.DeleteOneByID)
-			// 	resources.GET("/survey-item", surveyItemHandler.GetAll)
-
-			// 	resources.POST("/survey-assignment", surveyAssignmentHandler.Create)
-			// 	// resources.PUT("/survey-assignment/:id", surveyAssignmentHandler.UpdateOneByID)
-			// 	resources.PUT("/survey-assignment-header/:id", surveyAssignmentHandler.UpdateOneHeaderByID)
-			// 	resources.GET("/survey-assignment/:id", surveyAssignmentHandler.GetOneByID)
-			// 	resources.GET("/survey-assignment", surveyAssignmentHandler.GetAll)
-			// 	// resources.DELETE("/survey-assignment/:id", surveyAssignmentHandler.DeleteOneByID)
-
-			// 	resources.POST("/survey-assignment-item", surveyAssignmentPegawaiInstansiHandler.Create)
-			// 	resources.GET("/survey-assignment-item/:id", surveyAssignmentPegawaiInstansiHandler.GetOneByID)
-			// 	resources.GET("/survey-assignment-item", surveyAssignmentPegawaiInstansiHandler.GetAll)
-
-			// 	resources.POST("/survey-assignment-instansi", surveyAssignmentInstansiHandler.Create)
-			// 	resources.GET("/survey-assignment-instansi/:id", surveyAssignmentInstansiHandler.GetOneByID)
-			// 	resources.GET("/survey-assignment-instansi", surveyAssignmentInstansiHandler.GetAll)
-
-			// 	resources.GET("/dashboard-chartbar", dashboardHandler.GetAllDataChartBarDashboard)
-			// 	resources.GET("/dashboard-chartbar-table", dashboardHandler.GetAllDataChartTableDashboard)
-			// 	resources.GET("/dashboard-chartbar-active-directorate", dashboardHandler.GetAllDataChartBarActiveDirectorate)
-			// 	resources.GET("/dashboard-chartbar-pivot-bymonth", dashboardHandler.GetAllDataChartPivotmonth)
-			// 	resources.GET("/dashboard-chartbar-eachassignment-perdirectorate", dashboardHandler.GetAllDataChartBarEachAssignmentPerDirektorat)
-			// 	resources.GET("/dashboard-table-average-value-eachquestion-allassignment-perdirectorate", dashboardHandler.GetAllDataAverageValueEachQuestionFromAllAssignmentPerDirektorat)
-			// 	resources.GET("/dashboard-table-average-value-allassignment-perdirectorate", dashboardHandler.GetAllDataChartIndexAverageAllAssignmentPerDirektorat)
-
-			// 	// dibawah ini adalah router khusus untuk aplikasi responden
-			// 	// dashboard
-			// 	resources.GET("/respondent/survey", respondentHandler.GetAllSurveyAssigned)
-			// 	resources.GET("/respondent/survey/history", surveyHandler.GetHistoryByID)
-
-			// 	// // start survey
-			// 	// resources.GET("/respondent/survey/assigned/:id", respondentHandler.GetDetailSurveyAssignedByIDSurvey)
-			// 	resources.GET("/temporary-uri/:id_survey/details/:id_survey_assignment", respondentHandler.GetDetailSurveyAssignedByIDSurvey)
-			// 	resources.POST("/temporary-start-survey", respondentHandler.StartNewSurvey)
-
-			// 	// // on going survey
-			// 	resources.GET("/temporary-uri-survey/:id_survey_assignment", respondentHandler.GetOnePageSurveyAssignedByIDSurvey)
-			// 	resources.POST("/temporary-submit", respondentHandler.Submit)
-			// 	resources.POST("/temporary-upload", respondentHandler.UploadFile)
-
-			// 	// end survey
+			resources.POST("/ruangan", ruanganHandler.Create)
+			resources.GET("/ruangan/:id", ruanganHandler.GetOneByID)
+			resources.PUT("/ruangan/:id", ruanganHandler.UpdateOneByID)
+			resources.DELETE("/ruangan/:id", ruanganHandler.DeleteOneByID)
+			resources.GET("/ruangan", ruanganHandler.GetAll)
 		}
 	}
 
