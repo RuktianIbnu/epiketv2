@@ -44,8 +44,8 @@ func (m *repository) Create(data *model.MsStruktur) (int64, error) {
 		nama_struktur, nip, parent_id) VALUES(?,?,?)`
 
 	res, err := m.DB.Exec(query,
-		&data.Nip,
 		&data.Nama_struktur,
+		&data.Nip,
 		&data.Parent_id,
 	)
 

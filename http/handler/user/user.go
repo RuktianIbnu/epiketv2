@@ -175,7 +175,7 @@ func (m *handler) GetAll(c *gin.Context) {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return
 	}
-	list, totalEntries, err := m.userUsecase.GetAll(dqp)
+	list, totalEntries, err := m.userUsecase.GetAll()
 	if err != nil {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return

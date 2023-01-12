@@ -17,7 +17,7 @@ type Repository interface {
 	GetOneByID(id int64) (*model.MsUser, error)
 	GetOneByNip(id string) (*model.MsUser, error)
 	GetAllByID(id int64) ([]*model.MsUser, error)
-	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
+	GetAll() ([]*model.MsUser, int, error)
 	DeleteOneByID(id int64) (int64, error)
 	getTotalCount() (totalEntries int)
 
@@ -221,10 +221,7 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 		list_data = make([]*model.MsUser, 0)
 	)
 
-	query := `SELECT
-	id, nip, nama, no_hp, password, id_struktur, aktif, id_role
-	FROM ms_users
-	WHERE nip = ?`
+	query := `SELECT a.id, a.nip, a.nama, a.no_hp, a.password, a.id_struktur, a.aktif, a.id_role, b.id as 'id_struktur', b.nama_struktur, b.nip FROM ms_users as a join ms_struktur as b on b.id = a.id_struktur WHERE a.nip = ?`
 
 	rows, err := m.DB.Query(query, id)
 	if err != nil {
@@ -234,7 +231,8 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 
 	for rows.Next() {
 		var (
-			data model.MsUser
+			data         model.MsUser
+			dataStruktur model.MsStruktur
 		)
 
 		if err := rows.Scan(
@@ -246,8 +244,17 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 			&data.Id_struktur,
 			&data.Aktif,
 			&data.Id_role,
+			&dataStruktur.ID,
+			&dataStruktur.Nama_struktur,
+			&dataStruktur.Nip,
 		); err != nil {
 			return nil, err
+		}
+
+		data.Struktur = &model.MsStruktur{
+			ID:            dataStruktur.ID,
+			Nama_struktur: dataStruktur.Nama_struktur,
+			Nip:           dataStruktur.Nip,
 		}
 
 		list_data = append(list_data, &data)
@@ -256,19 +263,15 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 	return list_data, nil
 }
 
-func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error) {
+func (m *repository) GetAll() ([]*model.MsUser, int, error) {
 	var (
 		list = make([]*model.MsUser, 0)
 	)
 
-	query := `SELECT id, nip, nama, no_hp, password, id_struktur, aktif, id_role FROM ms_users`
+	query := `SELECT a.id, a.nip, a.nama, a.no_hp, a.password, a.id_struktur, a.aktif, a.id_role, b.id as 'id_struktur', b.nama_struktur, b.nip 
+	FROM ms_users as a join ms_struktur as b on b.id = a.id_struktur`
 
-	if dqp.Search != "" {
-		query += ` WHERE MATCH(nip, nama) AGAINST(:search IN NATURAL LANGUAGE MODE)`
-	}
-	query += ` LIMIT :limit OFFSET :offset`
-
-	rows, err := m.DB.NamedQuery(m.DB.Rebind(query), dqp.Params)
+	rows, err := m.DB.Query(query)
 	if err != nil {
 		return nil, -1, err
 	}
@@ -276,7 +279,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 
 	for rows.Next() {
 		var (
-			data model.MsUser
+			data         model.MsUser
+			dataStruktur model.MsStruktur
 		)
 
 		if err := rows.Scan(
@@ -288,10 +292,18 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int,
 			&data.Id_struktur,
 			&data.Aktif,
 			&data.Id_role,
+			&dataStruktur.ID,
+			&dataStruktur.Nama_struktur,
+			&dataStruktur.Nip,
 		); err != nil {
 			return nil, -1, err
 		}
 
+		data.Struktur = &model.MsStruktur{
+			ID:            dataStruktur.ID,
+			Nama_struktur: dataStruktur.Nama_struktur,
+			Nip:           dataStruktur.Nip,
+		}
 		list = append(list, &data)
 	}
 
