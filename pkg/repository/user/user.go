@@ -128,14 +128,13 @@ func (m *repository) CheckUserIsActive(nip string) (exist bool) {
 }
 
 func (m *repository) UpdateOneByID(data *model.MsUser) (int64, error) {
-	query := `UPDATE ms_users set nip=?, nama=?, no_hp=?, password=?, id_struktur=?, aktif=?, id_role=?
+	query := `UPDATE ms_users set nip=?, nama=?, no_hp=?, id_struktur=?, aktif=?, id_role=?
 	WHERE id = ?`
 
 	res, err := m.DB.Exec(query,
 		&data.Nip,
 		&data.Nama,
 		&data.No_hp,
-		&data.Password,
 		&data.Id_struktur,
 		&data.Aktif,
 		&data.Id_role,
