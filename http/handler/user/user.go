@@ -102,7 +102,7 @@ func (m *handler) Create(c *gin.Context) {
 
 	isExistNIP := m.userUsecase.CheckNIPExist(data.Nip)
 	if isExistNIP {
-		c.JSON(resp.Format(http.StatusOK, nil, gin.H{"message": "NIP sudah terdaftar!"}))
+		c.JSON(resp.Format(http.StatusAlreadyReported, nil, gin.H{"message": "NIP sudah terdaftar!"}))
 		return
 	}
 
@@ -175,7 +175,7 @@ func (m *handler) GetAll(c *gin.Context) {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return
 	}
-	list, totalEntries, err := m.userUsecase.GetAll()
+	list, totalEntries, err := m.userUsecase.GetAll(dqp)
 	if err != nil {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return

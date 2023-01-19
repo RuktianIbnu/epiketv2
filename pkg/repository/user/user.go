@@ -17,7 +17,7 @@ type Repository interface {
 	GetOneByID(id int64) (*model.MsUser, error)
 	GetOneByNip(id string) (*model.MsUser, error)
 	GetAllByID(id int64) ([]*model.MsUser, error)
-	GetAll() ([]*model.MsUser, int, error)
+	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
 	DeleteOneByID(id int64) (int64, error)
 	getTotalCount() (totalEntries int)
 
@@ -220,7 +220,7 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 		list_data = make([]*model.MsUser, 0)
 	)
 
-	query := `SELECT a.id, a.nip, a.nama, a.no_hp, a.password, a.id_struktur, a.aktif, a.id_role, b.id as 'id_struktur', b.nama_struktur, b.nip FROM ms_users as a join ms_struktur as b on b.id = a.id_struktur WHERE a.nip = ?`
+	query := `SELECT a.id, a.nip, a.nama, a.no_hp, a.password, a.id_struktur, a.aktif, a.id_role, b.id as 'id_struktur', b.nama_struktur, b.nip FROM ms_users as a left join ms_struktur as b on b.id = a.id_struktur WHERE a.nip = ?`
 
 	rows, err := m.DB.Query(query, id)
 	if err != nil {
@@ -262,7 +262,7 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsUser, error) {
 	return list_data, nil
 }
 
-func (m *repository) GetAll() ([]*model.MsUser, int, error) {
+func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error) {
 	var (
 		list = make([]*model.MsUser, 0)
 	)
@@ -270,9 +270,10 @@ func (m *repository) GetAll() ([]*model.MsUser, int, error) {
 	query := `SELECT a.id, a.nip, a.nama, a.no_hp, a.password, a.id_struktur, a.aktif, a.id_role, b.id as 'id_struktur', b.nama_struktur, b.nip 
 	FROM ms_users as a join ms_struktur as b on b.id = a.id_struktur`
 
-	rows, err := m.DB.Query(query)
+	query += ` LIMIT :limit OFFSET :offset`
+	rows, err := m.DB.NamedQuery(m.DB.Rebind(query), dqp.Params)
 	if err != nil {
-		return nil, -1, err
+		return nil, 0, err
 	}
 	defer rows.Close()
 

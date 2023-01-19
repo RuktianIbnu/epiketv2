@@ -17,7 +17,7 @@ type Usecase interface {
 	GetOneByNip(nip string) (*model.MsUser, error)
 	UpdateOneByID(data *model.MsUser) (int64, error)
 	DeleteOneByID(id int64) (int64, error)
-	GetAll() ([]*model.MsUser, int, error)
+	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error)
 	CheckNIPExist(nip string) bool
 	Register(nip string, nama, no_hp, password string, id_struktur, aktif, id_role int64) (int64, error)
 	Login(nip, password string) (string, error)
@@ -45,7 +45,12 @@ func NewUsecase() Usecase {
 }
 
 func (m *usecase) Create(data *model.MsUser) (int64, error) {
-	return m.user.Create(data)
+	hashedPwd, err := bcrypt.Hash(data.Password)
+	if err != nil {
+		return 500, err
+	}
+
+	return m.user.Register(data.Nip, data.Nama, data.No_hp, hashedPwd, data.Id_struktur, data.Aktif, data.Id_role)
 }
 
 func (m *usecase) Login(nip, password string) (string, error) {
@@ -114,12 +119,8 @@ func (m *usecase) GetOneByNip(nip string) (*model.MsUser, error) {
 	return dataUser, nil
 }
 
-func (m *usecase) GetAll() ([]*model.MsUser, int, error) {
-	dataUser, count, err := m.user.GetAll()
-	if err != nil {
-		return nil, -1, err
-	}
-	return dataUser, count, err
+func (m *usecase) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsUser, int, error) {
+	return m.user.GetAll(dqp)
 }
 
 func (m *usecase) DeleteOneByID(id int64) (int64, error) {
