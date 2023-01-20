@@ -161,6 +161,7 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsKegiatan, error) {
 		if err := rows.Scan(
 			&data.ID,
 			&data.Nama_kegiatan,
+			&data.Deskripsi,
 		); err != nil {
 			return nil, err
 		}
@@ -196,6 +197,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsKegiatan, 
 
 		if err := rows.Scan(
 			&data.ID,
+			&data.Nama_kegiatan,
 			&data.Deskripsi,
 		); err != nil {
 			return nil, -1, err

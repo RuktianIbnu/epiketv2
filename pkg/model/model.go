@@ -46,7 +46,7 @@ type MsRuangan struct {
 type MsDataCenter struct {
 	ID      int64  `json:"id"`
 	Nama_dc string `json:"nama_dc"`
-	Lokasi  int64  `json:"lokasi"`
+	Lokasi  string `json:"lokasi"`
 }
 
 // Kegiatan ...
