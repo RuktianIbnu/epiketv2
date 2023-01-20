@@ -181,7 +181,12 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsStruktur, 
 		list = make([]*model.MsStruktur, 0)
 	)
 
-	query := `SELECT id, nama_struktur, nip, parent_id FROM ms_struktur`
+	query := `SELECT distinct a.id, a.nama_struktur, a.nip, a.parent_id, 
+	COALESCE(b.parent_id, 0) AS id_parent,
+	COALESCE(b.nama_struktur, '-') AS nama_parent,
+	COALESCE(b.nip, 0) AS nip_parent
+		FROM ms_struktur as a 
+		LEFT JOIN ms_struktur as b on b.id = a.parent_id`
 
 	if dqp.Search != "" {
 		query += ` WHERE MATCH(nip, nama_struktur) AGAINST(:search IN NATURAL LANGUAGE MODE)`
@@ -189,6 +194,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsStruktur, 
 	query += ` LIMIT :limit OFFSET :offset`
 
 	rows, err := m.DB.NamedQuery(m.DB.Rebind(query), dqp.Params)
+
 	if err != nil {
 		return nil, -1, err
 	}
@@ -196,7 +202,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsStruktur, 
 
 	for rows.Next() {
 		var (
-			data model.MsStruktur
+			data         model.MsStruktur
+			dataStruktur model.MsStruktur
 		)
 
 		if err := rows.Scan(
@@ -204,8 +211,16 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsStruktur, 
 			&data.Nama_struktur,
 			&data.Nip,
 			&data.Parent_id,
+			&dataStruktur.ID,
+			&dataStruktur.Nama_struktur,
+			&dataStruktur.Nip,
 		); err != nil {
 			return nil, -1, err
+		}
+		data.Parent_Detail = &model.MsStruktur{
+			ID:            dataStruktur.ID,
+			Nama_struktur: dataStruktur.Nama_struktur,
+			Nip:           dataStruktur.Nip,
 		}
 
 		list = append(list, &data)

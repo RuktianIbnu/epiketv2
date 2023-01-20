@@ -27,10 +27,11 @@ type MsUser struct {
 
 // Struktur ...
 type MsStruktur struct {
-	ID            int64  `json:"id"`
-	Nama_struktur string `json:"nama_struktur"`
-	Nip           string `json:"nip"`
-	Parent_id     int64  `json:"parent_id"`
+	ID            int64       `json:"id"`
+	Nama_struktur string      `json:"nama_struktur"`
+	Nip           string      `json:"nip"`
+	Parent_id     int64       `json:"parent_id"`
+	Parent_Detail *MsStruktur `json:"parent_detail"`
 }
 
 // Ruangan ...
@@ -52,7 +53,7 @@ type MsDataCenter struct {
 type MsKegiatan struct {
 	ID            int64  `json:"id"`
 	Nama_kegiatan string `json:"nama_kegiatan"`
-	Deskripsi     int64  `json:"deskripsi"`
+	Deskripsi     string `json:"deskripsi"`
 }
 
 // Item ...
