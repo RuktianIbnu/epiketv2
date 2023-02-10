@@ -61,7 +61,7 @@ type MsItem struct {
 	ID         int64      `json:"id"`
 	Nama_item  string     `json:"nama_item"`
 	Id_ruangan int64      `json:"id_ruangan"`
-	Deskripsi  int64      `json:"deskripsi"`
+	Deskripsi  string     `json:"deskripsi"`
 	Parent_id  int64      `json:"parent_id"`
 	Ruangan    *MsRuangan `json:"ruangan"`
 }

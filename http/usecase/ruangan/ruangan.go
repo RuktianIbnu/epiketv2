@@ -2,6 +2,7 @@ package ruangan
 
 import (
 	"epiketv2/pkg/model"
+	dcr "epiketv2/pkg/repository/data_center"
 	rr "epiketv2/pkg/repository/ruangan"
 
 	"errors"
@@ -17,13 +18,15 @@ type Usecase interface {
 }
 
 type usecase struct {
-	ruanganRepo rr.Repository
+	ruanganRepo    rr.Repository
+	datacenterRepo dcr.Repository
 }
 
 // NewUsecase ...
 func NewUsecase() Usecase {
 	return &usecase{
 		rr.NewRepository(),
+		dcr.NewRepository(),
 	}
 }
 
@@ -42,7 +45,19 @@ func (m *usecase) UpdateOneByID(data *model.MsRuangan) (int64, error) {
 }
 
 func (m *usecase) GetOneByID(id int64) (*model.MsRuangan, error) {
-	return m.ruanganRepo.GetOneByID(id)
+	dataRuangan, err := m.ruanganRepo.GetOneByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	dataDc, err := m.datacenterRepo.GetOneByID(dataRuangan.Id_dc)
+	if err != nil {
+		return nil, err
+	}
+
+	dataRuangan.DataCenter = dataDc
+
+	return dataRuangan, nil
 }
 
 func (m *usecase) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, int, error) {

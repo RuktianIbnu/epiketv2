@@ -177,10 +177,13 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, i
 		list = make([]*model.MsRuangan, 0)
 	)
 
-	query := `SELECT id, id_dc, nama_ruangan FROM ms_ruangan`
+	query := `SELECT
+	a.id, a.id_dc, a.nama_ruangan, b.nama_dc, b.lokasi
+	FROM ms_ruangan as a
+	join ms_data_center as b on a.id_dc = b.id`
 
 	if dqp.Search != "" {
-		query += ` WHERE MATCH(nama_ruangan) AGAINST(:search IN NATURAL LANGUAGE MODE)`
+		query += ` WHERE MATCH(a.nama_ruangan) AGAINST(:search IN NATURAL LANGUAGE MODE)`
 	}
 	query += ` LIMIT :limit OFFSET :offset`
 
@@ -192,15 +195,24 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, i
 
 	for rows.Next() {
 		var (
-			data model.MsRuangan
+			data       model.MsRuangan
+			dataCenter model.MsDataCenter
 		)
 
 		if err := rows.Scan(
 			&data.ID,
 			&data.Id_dc,
 			&data.Nama_ruangan,
+			&dataCenter.Nama_dc,
+			&dataCenter.Lokasi,
 		); err != nil {
 			return nil, -1, err
+		}
+
+		data.DataCenter = &model.MsDataCenter{
+			ID:      dataCenter.ID,
+			Nama_dc: dataCenter.Nama_dc,
+			Lokasi:  dataCenter.Lokasi,
 		}
 
 		list = append(list, &data)
