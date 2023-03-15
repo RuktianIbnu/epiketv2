@@ -185,7 +185,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsItem, int,
 		list = make([]*model.MsItem, 0)
 	)
 
-	query := `SELECT id, nama_item, id_ruangan, deskripsi, parent_id FROM ms_item`
+	query := `SELECT a.id, a.nama_item, a.id_ruangan, b.nama_ruangan, a.deskripsi FROM ms_item as A 
+	join ms_ruangan as b on a.id_ruangan = b.id`
 
 	if dqp.Search != "" {
 		query += ` WHERE MATCH(nama_item) AGAINST(:search IN NATURAL LANGUAGE MODE)`
@@ -200,14 +201,23 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsItem, int,
 
 	for rows.Next() {
 		var (
-			data model.MsItem
+			data        model.MsItem
+			dataRuangan model.MsRuangan
 		)
 
 		if err := rows.Scan(
 			&data.ID,
+			&data.Nama_item,
+			&data.Id_ruangan,
+			&dataRuangan.Nama_ruangan,
 			&data.Deskripsi,
 		); err != nil {
 			return nil, -1, err
+		}
+
+		data.Ruangan = &model.MsRuangan{
+			ID:           data.ID,
+			Nama_ruangan: dataRuangan.Nama_ruangan,
 		}
 
 		list = append(list, &data)
