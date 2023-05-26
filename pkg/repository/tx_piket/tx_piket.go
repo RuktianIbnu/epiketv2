@@ -209,7 +209,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxKegiatanPi
 	a.hasil, a.status, a.id_user_2, b.nama_kegiatan, b.deskripsi, c.nama_dc, c.lokasi, d.nama_ruangan, e.nama_item, e.deskripsi, f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
 	g.nama as nama_user2, g.no_hp as no_hp_user2
 	FROM tx_kegiatan_piket as a
-	join ms_kegiatan as b on a.id = a.id_kegiatan
+	join ms_kegiatan as b on b.id = a.id_kegiatan
 	join ms_data_center as c on c.id = a.id_data_center
 	join ms_ruangan as d on d.id = a.id_ruangan
 	join ms_item as e on e.id = a.id_item
@@ -254,6 +254,19 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxKegiatanPi
 			&data.Hasil,
 			&data.Status,
 			&data.IdUser2,
+			&kegiatan.Nama_kegiatan,
+			&kegiatan.Deskripsi,
+			&dataCenter.Nama_dc,
+			&dataCenter.Lokasi,
+			&ruangan.Nama_ruangan,
+			&item.Nama_item,
+			&item.Deskripsi,
+			&user.Nip,
+			&user.Nama,
+			&user.No_hp,
+			&user2.Nip,
+			&user2.Nama,
+			&user2.No_hp,
 		); err != nil {
 			return nil, -1, err
 		}
