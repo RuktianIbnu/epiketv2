@@ -66,45 +66,27 @@ type MsItem struct {
 	Ruangan    *MsRuangan `json:"ruangan"`
 }
 
-// Piket ...
-type TxPiket struct {
-	ID         int64      `json:"id"`
-	Tanggal    string     `json:"tanggal"`
-	Id_user    *time.Time `json:"id_user"`
-	UserDetail *MsUser    `json:"user_detail"`
-}
-
-// Kegiatan Vendor ...
-type TxKegiatanVendor struct {
-	ID                int64       `json:"id"`
-	Nama_pic          string      `json:"nama_pic"`
-	Nama_vendor       string      `json:"nama_vendor"`
-	Id_piket          int64       `json:"id_piket"`
-	Id_kegiatan       int64       `json:"id_kegiatan"`
-	Tanggal_mulai     *time.Time  `json:"tanggaal_mulai"`
-	Tanggal_selesai   *time.Time  `json:"tanggal_selesai"`
-	Resiko            string      `json:"resiko"`
-	Hasil             string      `json:"hasil"`
-	IdDokumenKegiatan int64       `json:"id_dokumen_kegiatana"`
-	Status            string      `json:"status"`
-	Piket             *TxPiket    `json:"piket"`
-	Kegiatan          *MsKegiatan `json:"kegiatan"`
-}
-
-// Kegiatan Petugas ...
-type TxKegiatanPetugas struct {
-	ID                int64       `json:"id"`
-	Id_piket          int64       `json:"id_piket"`
-	Id_kegiatan       int64       `json:"id_kegiatan"`
-	Deskripsi         string      `json:"resiko"`
-	Hasil             string      `json:"hasil"`
-	IdDokumenKegiatan int64       `json:"id_dokumen_kegiatana"`
-	Piket             *TxPiket    `json:"piket"`
-	Kegiatan          *MsKegiatan `json:"kegiatan"`
-}
-
-// Dokumen Kegiatan ...
-type TxDokumenKegiatan struct {
-	ID               int64  `json:"id"`
-	Dokumen_kegiatan string `json:"dokumen_kegiatan"`
+// Kegiatan Piket ...
+type TxKegiatanPiket struct {
+	ID               int64         `json:"id"`
+	IdKegiatan       int64         `json:"id_kegiatan"`
+	IdDataCenter     int64         `json:"id_data_center"`
+	IdRuangan        int64         `json:"id_ruangan"`
+	IdItem           int64         `json:"id_item"`
+	IdUsers          int64         `json:"id_users"`
+	NamaPicVendor    string        `json:"nama_pic_vendor"`
+	NamaPerusahaan   string        `json:"nama_perusahaan"`
+	TanggalMulai     *time.Time    `json:"tanggal_mulai"`
+	TanggalSelesai   *time.Time    `json:"tanggal_selesai"`
+	Deskripsi        string        `json:"deskripsi"`
+	Resiko           string        `json:"resiko"`
+	Hasil            string        `json:"hasil"`
+	Status           string        `json:"status"`
+	IdUser2          int64         `json:"id_user_2"`
+	DetailKegiatan   *MsKegiatan   `json:"detail_kegiatan"`
+	DetailDataCenter *MsDataCenter `json:"detail_dataCenter"`
+	DetailRuangan    *MsRuangan    `json:"detail_ruangan"`
+	DetailItem       *MsItem       `json:"detail_item"`
+	DetailUser       *MsUser       `json:"detail_user"`
+	DetailUserTwo    *MsUser       `json:"detail_user2"`
 }

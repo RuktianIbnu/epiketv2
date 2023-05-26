@@ -8,6 +8,7 @@ import (
 	kegiatanHandler "epiketv2/http/handler/kegiatan"
 	ruanganHandler "epiketv2/http/handler/ruangan"
 	strukturHandler "epiketv2/http/handler/struktur"
+	txpiketHandler "epiketv2/http/handler/tx_piket"
 	userHandler "epiketv2/http/handler/user"
 	"epiketv2/http/middleware/auth"
 	"epiketv2/http/middleware/cors"
@@ -31,6 +32,7 @@ func Routes() *gin.Engine {
 	kegiatanHandler := kegiatanHandler.NewHandler()
 	itemHandler := itemHandler.NewHandler()
 	ruanganHandler := ruanganHandler.NewHandler()
+	txpiketHandler := txpiketHandler.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -79,6 +81,12 @@ func Routes() *gin.Engine {
 			resources.PUT("/ruangan/:id", ruanganHandler.UpdateOneByID)
 			resources.DELETE("/ruangan/:id", ruanganHandler.DeleteOneByID)
 			resources.GET("/ruangan", ruanganHandler.GetAll)
+
+			resources.POST("/tx-piket", txpiketHandler.Create)
+			resources.GET("/tx-piket/:id", txpiketHandler.GetOneByID)
+			resources.PUT("/tx-piket/:id", txpiketHandler.UpdateOneByID)
+			resources.DELETE("/tx-piket/:id", txpiketHandler.DeleteOneByID)
+			resources.GET("/tx-piket", txpiketHandler.GetAll)
 		}
 	}
 
