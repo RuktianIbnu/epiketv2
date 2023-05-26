@@ -206,7 +206,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxKegiatanPi
 
 	query := `SELECT
 	a.id, a.id_kegiatan, a.id_data_center, a.id_ruangan, a.id_item, a.id_users, a.nama_pic_vendor, a.nama_perusahaan, a.tanggal_mulai, a.tanggal_selesai, a.deskripsi, a.resiko, 
-	a.hasil, a.status, a.id_user_2, b.nama_kegiatan, b.deskripsi, c.nama_dc, c.lokasi, d.nama_ruangan, e.nama_item, e.deskripsi, f.nip, f.nama, f.no_hp, g.nip, g.nama, g.no_hp
+	a.hasil, a.status, a.id_user_2, b.nama_kegiatan, b.deskripsi, c.nama_dc, c.lokasi, d.nama_ruangan, e.nama_item, e.deskripsi, f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
+	g.nama as nama_user2, g.no_hp as no_hp_user2
 	FROM tx_kegiatan_piket as a
 	join ms_kegiatan as b on a.id = a.id_kegiatan
 	join ms_data_center as c on c.id = a.id_data_center
