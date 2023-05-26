@@ -15,6 +15,7 @@ type Usecase interface {
 	UpdateOneByID(data *model.MsRuangan) (int64, error)
 	DeleteOneByID(id int64) (int64, error)
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, int, error)
+	GetAllById_dc(id_dc int64) ([]*model.MsRuangan, error)
 }
 
 type usecase struct {
@@ -56,6 +57,15 @@ func (m *usecase) GetOneByID(id int64) (*model.MsRuangan, error) {
 	}
 
 	dataRuangan.DataCenter = dataDc
+
+	return dataRuangan, nil
+}
+
+func (m *usecase) GetAllById_dc(id_dc int64) ([]*model.MsRuangan, error) {
+	dataRuangan, err := m.ruanganRepo.GetAllByIDdataCenter(id_dc)
+	if err != nil {
+		return nil, err
+	}
 
 	return dataRuangan, nil
 }

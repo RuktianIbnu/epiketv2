@@ -18,6 +18,7 @@ type Repository interface {
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsRuangan, int, error)
 	DeleteOneByID(id int64) (int64, error)
 	GetTotalCount() (totalEntries int)
+	GetAllByIDdataCenter(id_dc int64) ([]*model.MsRuangan, error)
 }
 
 type repository struct {
@@ -148,6 +149,41 @@ func (m *repository) GetAllByID(id int64) ([]*model.MsRuangan, error) {
 	WHERE id = ?`
 
 	rows, err := m.DB.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.MsRuangan
+		)
+
+		if err := rows.Scan(
+			&data.ID,
+			&data.Id_dc,
+			&data.Nama_ruangan,
+		); err != nil {
+			return nil, err
+		}
+
+		list_data = append(list_data, &data)
+	}
+
+	return list_data, nil
+}
+
+func (m *repository) GetAllByIDdataCenter(id_dc int64) ([]*model.MsRuangan, error) {
+	var (
+		list_data = make([]*model.MsRuangan, 0)
+	)
+
+	query := `SELECT
+	id, id_dc, nama_ruangan
+	FROM ms_ruangan
+	WHERE id_dc = ?`
+
+	rows, err := m.DB.Query(query, id_dc)
 	if err != nil {
 		return nil, err
 	}

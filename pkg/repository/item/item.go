@@ -18,6 +18,7 @@ type Repository interface {
 	GetAll(dqp *model.DefaultQueryParam) ([]*model.MsItem, int, error)
 	DeleteOneByID(id int64) (int64, error)
 	getTotalCount() (totalEntries int)
+	GetAllByIdRuangan(id int64) ([]*model.MsItem, error)
 }
 
 type repository struct {
@@ -224,6 +225,43 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.MsItem, int,
 	}
 
 	return list, m.getTotalCount(), nil
+}
+
+func (m *repository) GetAllByIdRuangan(id int64) ([]*model.MsItem, error) {
+	var (
+		list_data = make([]*model.MsItem, 0)
+	)
+
+	query := `SELECT
+	id, nama_item, id_ruangan, deskripsi, parent_id
+	FROM ms_item
+	WHERE id_ruangan = ?`
+
+	rows, err := m.DB.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			data model.MsItem
+		)
+
+		if err := rows.Scan(
+			&data.ID,
+			&data.Nama_item,
+			&data.Id_ruangan,
+			&data.Deskripsi,
+			&data.Parent_id,
+		); err != nil {
+			return nil, err
+		}
+
+		list_data = append(list_data, &data)
+	}
+
+	return list_data, nil
 }
 
 func (m *repository) GetUserMetadataById(id int64) (*model.MsItem, error) {

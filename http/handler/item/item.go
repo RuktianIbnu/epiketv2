@@ -19,6 +19,7 @@ type Handler interface {
 	UpdateOneByID(c *gin.Context)
 	DeleteOneByID(c *gin.Context)
 	GetAll(c *gin.Context)
+	GetAllByIdRuangan(c *gin.Context)
 }
 
 type handler struct {
@@ -30,6 +31,25 @@ func NewHandler() Handler {
 	return &handler{
 		iu.NewUsecase(),
 	}
+}
+
+func (m *handler) GetAllByIdRuangan(c *gin.Context) {
+	var (
+		ids, _ = strconv.ParseInt(c.Param("id"), 10, 64)
+	)
+
+	if ids <= 0 {
+		c.JSON(resp.Format(http.StatusBadRequest, errors.New("Provide a valid ID")))
+		return
+	}
+
+	data, err := m.itemUsecase.GetAllByIdRuangan(ids)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, data))
 }
 
 func (m *handler) Create(c *gin.Context) {

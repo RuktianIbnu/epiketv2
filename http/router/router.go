@@ -63,6 +63,7 @@ func Routes() *gin.Engine {
 			resources.PUT("/item/:id", itemHandler.UpdateOneByID)
 			resources.DELETE("/item/:id", itemHandler.DeleteOneByID)
 			resources.GET("/item", itemHandler.GetAll)
+			resources.GET("/item-by-id-ruangan/:id", itemHandler.GetAllByIdRuangan)
 
 			resources.POST("/kegiatan", kegiatanHandler.Create)
 			resources.GET("/kegiatan/:id", kegiatanHandler.GetOneByID)
@@ -78,6 +79,7 @@ func Routes() *gin.Engine {
 
 			resources.POST("/ruangan", ruanganHandler.Create)
 			resources.GET("/ruangan/:id", ruanganHandler.GetOneByID)
+			resources.GET("/ruangan-by-id-dc/:id", ruanganHandler.GetAllById_dc)
 			resources.PUT("/ruangan/:id", ruanganHandler.UpdateOneByID)
 			resources.DELETE("/ruangan/:id", ruanganHandler.DeleteOneByID)
 			resources.GET("/ruangan", ruanganHandler.GetAll)
