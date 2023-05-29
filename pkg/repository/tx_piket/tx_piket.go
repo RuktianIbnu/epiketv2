@@ -206,15 +206,18 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxKegiatanPi
 
 	query := `SELECT
 	a.id, a.id_kegiatan, a.id_data_center, a.id_ruangan, a.id_item, a.id_users, a.nama_pic_vendor, a.nama_perusahaan, a.tanggal_mulai, a.tanggal_selesai, a.deskripsi, a.resiko, 
-	a.hasil, a.status, a.id_user_2, b.nama_kegiatan, b.deskripsi, c.nama_dc, c.lokasi, d.nama_ruangan, e.nama_item, e.deskripsi, f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
+	a.hasil, a.status, a.id_user_2, COALESCE(b.nama_kegiatan,0) as nama_kegiatan, COALESCE(b.deskripsi,0) as deskripsi, c.nama_dc, c.lokasi, d.nama_ruangan, 
+	COALESCE(e.nama_item,0) as nama_item, 
+	COALESCE(e.deskripsi,0) as deskripsi, 
+	f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
 	g.nama as nama_user2, g.no_hp as no_hp_user2
 	FROM tx_kegiatan_piket as a
-	join ms_kegiatan as b on b.id = a.id_kegiatan
-	join ms_data_center as c on c.id = a.id_data_center
-	join ms_ruangan as d on d.id = a.id_ruangan
-	join ms_item as e on e.id = a.id_item
-	join ms_users as f on f.id = a.id_users
-	join ms_users as g on g.id = a.id_user_2`
+	left join ms_kegiatan as b on b.id = a.id_kegiatan
+	left join ms_data_center as c on c.id = a.id_data_center
+	left join ms_ruangan as d on d.id = a.id_ruangan
+	left join ms_item as e on e.id = a.id_item
+	left join ms_users as f on f.id = a.id_users
+	left join ms_users as g on g.id = a.id_user_2`
 
 	if dqp.Search != "" {
 		query += ` WHERE MATCH(a.nama_ruangan) AGAINST(:search IN NATURAL LANGUAGE MODE)`
