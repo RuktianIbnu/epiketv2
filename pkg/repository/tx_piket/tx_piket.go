@@ -92,6 +92,7 @@ func (m *repository) UpdateByID(data *model.TxKegiatanPiket) (int64, error) {
 		&data.Hasil,
 		&data.Status,
 		&data.IdUser2,
+		&data.ID,
 	)
 
 	if err != nil {

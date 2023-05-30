@@ -6,6 +6,7 @@ import (
 	resp "epiketv2/pkg/helper/response"
 	"epiketv2/pkg/model"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -69,6 +70,8 @@ func (m *handler) UpdateOneByID(c *gin.Context) {
 	}
 
 	data.ID = ids
+
+	fmt.Print(ids)
 
 	_, err := m.tx_piketUsecase.UpdateOneByID(&data)
 	if err != nil {
