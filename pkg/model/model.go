@@ -106,3 +106,8 @@ type TxPiketHarian struct {
 	DetailUser       *MsUser       `json:"detail_user,omitempty"`
 	DetailUserTwo    *MsUser       `json:"detail_user2,omitempty"`
 }
+
+type DashKegiatan struct {
+	NamaKegiatan string `json:"nama_kegiatan,omitempty"`
+	Jumlah       string `json:"jumlah,omitempty"`
+}

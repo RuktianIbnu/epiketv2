@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
+	dashboardHandler "epiketv2/http/handler/dashboard"
 	dcHandler "epiketv2/http/handler/data_center"
 	itemHandler "epiketv2/http/handler/item"
 	kegiatanHandler "epiketv2/http/handler/kegiatan"
@@ -35,6 +36,7 @@ func Routes() *gin.Engine {
 	ruanganHandler := ruanganHandler.NewHandler()
 	txpiketHandler := txpiketHandler.NewHandler()
 	txharianHandler := txharianHandler.NewHandler()
+	dashboardHandler := dashboardHandler.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
@@ -97,6 +99,8 @@ func Routes() *gin.Engine {
 			resources.PUT("/tx-harian/:id", txharianHandler.UpdateOneByID)
 			resources.DELETE("/tx-harian/:id", txharianHandler.DeleteOneByID)
 			resources.GET("/tx-harian", txharianHandler.GetAll)
+
+			resources.GET("/dash-kegiatan", dashboardHandler.GetAll)
 		}
 	}
 
