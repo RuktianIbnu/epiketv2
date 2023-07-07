@@ -13,6 +13,10 @@ import (
 // Handler ...
 type Handler interface {
 	GetAll(c *gin.Context)
+	GetAllKondisiAbnormal(c *gin.Context)
+	GetAllStatusPending(c *gin.Context)
+	GetAllKunjungan(c *gin.Context)
+	GetAllTamu(c *gin.Context)
 }
 
 type handler struct {
@@ -43,6 +47,106 @@ func (m *handler) GetAll(c *gin.Context) {
 	dqp.Params["tahun"] = tahun
 	fmt.Println("dqp.Params = ", tahun)
 	list, totalEntries, err := m.dashKegiatanUsecase.GetAll(dqp)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, list, totalEntries, dqp.Page, dqp.Limit))
+}
+
+func (m *handler) GetAllKondisiAbnormal(c *gin.Context) {
+	var (
+		dq = qry.Q{
+			Ctx: c,
+		}
+		tahun = c.Query("tahun")
+	)
+
+	dqp, err := dq.DefaultQueryParam()
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	dqp.Params["tahun"] = tahun
+	fmt.Println("dqp.Params = ", tahun)
+	list, totalEntries, err := m.dashKegiatanUsecase.GetAllKondisiAbnormal(dqp)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, list, totalEntries, dqp.Page, dqp.Limit))
+}
+
+func (m *handler) GetAllStatusPending(c *gin.Context) {
+	var (
+		dq = qry.Q{
+			Ctx: c,
+		}
+		tahun = c.Query("tahun")
+	)
+
+	dqp, err := dq.DefaultQueryParam()
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	dqp.Params["tahun"] = tahun
+	fmt.Println("dqp.Params = ", tahun)
+	list, totalEntries, err := m.dashKegiatanUsecase.GetAllStatusPending(dqp)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, list, totalEntries, dqp.Page, dqp.Limit))
+}
+
+func (m *handler) GetAllKunjungan(c *gin.Context) {
+	var (
+		dq = qry.Q{
+			Ctx: c,
+		}
+		tahun = c.Query("tahun")
+	)
+
+	dqp, err := dq.DefaultQueryParam()
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	dqp.Params["tahun"] = tahun
+	fmt.Println("dqp.Params = ", tahun)
+	list, totalEntries, err := m.dashKegiatanUsecase.GetAllKunjungan(dqp)
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	c.JSON(resp.Format(http.StatusOK, nil, list, totalEntries, dqp.Page, dqp.Limit))
+}
+
+func (m *handler) GetAllTamu(c *gin.Context) {
+	var (
+		dq = qry.Q{
+			Ctx: c,
+		}
+		tahun = c.Query("tahun")
+	)
+
+	dqp, err := dq.DefaultQueryParam()
+	if err != nil {
+		c.JSON(resp.Format(http.StatusInternalServerError, err))
+		return
+	}
+
+	dqp.Params["tahun"] = tahun
+	fmt.Println("dqp.Params = ", tahun)
+	list, totalEntries, err := m.dashKegiatanUsecase.GetAllTamu(dqp)
 	if err != nil {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return

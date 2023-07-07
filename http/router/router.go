@@ -101,6 +101,10 @@ func Routes() *gin.Engine {
 			resources.GET("/tx-harian", txharianHandler.GetAll)
 
 			resources.GET("/dash-kegiatan", dashboardHandler.GetAll)
+			resources.GET("/dash-kondisi-abnormal", dashboardHandler.GetAllKondisiAbnormal)
+			resources.GET("/dash-status-pending", dashboardHandler.GetAllStatusPending)
+			resources.GET("/dash-kunjungan", dashboardHandler.GetAllKunjungan)
+			resources.GET("/dash-tamu", dashboardHandler.GetAllTamu)
 		}
 	}
 

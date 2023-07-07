@@ -111,3 +111,19 @@ type DashKegiatan struct {
 	NamaKegiatan string `json:"nama_kegiatan,omitempty"`
 	Jumlah       string `json:"jumlah,omitempty"`
 }
+
+type DashKondisiAbnormal struct {
+	Jumlah int64 `json:"jumlah,omitempty"`
+}
+
+type DashStatusPending struct {
+	Jumlah int64 `json:"jumlah,omitempty"`
+}
+
+type DashTamu struct {
+	Jumlah int64 `json:"jumlah,omitempty"`
+}
+
+type DashKunjungan struct {
+	Jumlah int64 `json:"jumlah,omitempty"`
+}
