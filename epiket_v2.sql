@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Bulan Mei 2023 pada 06.16
+-- Waktu pembuatan: 07 Jul 2023 pada 11.10
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 8.1.12
 
@@ -178,6 +178,33 @@ INSERT INTO `ms_users` (`id`, `nip`, `nama`, `no_hp`, `password`, `id_struktur`,
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `tx_kegiatan_harian`
+--
+
+CREATE TABLE `tx_kegiatan_harian` (
+  `id` int(11) NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `jam` datetime NOT NULL,
+  `id_data_center` int(11) NOT NULL,
+  `id_ruangan` int(11) NOT NULL,
+  `kondisi` varchar(50) NOT NULL,
+  `id_user_1` int(11) NOT NULL,
+  `id_user_2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tx_kegiatan_harian`
+--
+
+INSERT INTO `tx_kegiatan_harian` (`id`, `tanggal`, `jam`, `id_data_center`, `id_ruangan`, `kondisi`, `id_user_1`, `id_user_2`) VALUES
+(1, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'NORMAL', 10, 12),
+(3, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 1, 2, 'NORMAL', 10, 28),
+(5, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'ABNORMAL', 10, 12),
+(6, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'ABNORMAL', 10, 12);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `tx_kegiatan_piket`
 --
 
@@ -204,8 +231,109 @@ CREATE TABLE `tx_kegiatan_piket` (
 --
 
 INSERT INTO `tx_kegiatan_piket` (`id`, `id_kegiatan`, `id_data_center`, `id_ruangan`, `id_item`, `id_users`, `nama_pic_vendor`, `nama_perusahaan`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `resiko`, `hasil`, `status`, `id_user_2`) VALUES
-(1, 2, 1, 9, 4, 10, 'Arha', 'Syncro', '2023-05-25 00:00:00', '2023-05-25 00:00:00', 'install aplikasi molina', 'gagal install', 'berhasil install', 'SELESAI', 12),
-(2, 5, 1, 9, 6, 12, 'adri', 'prosia', '2023-05-29 07:00:00', '2023-05-30 07:00:00', 'cek server mati', 'pelayanan terhambat', 'berhasil up lg', 'SELESAI', 10);
+(2, 5, 1, 9, 6, 12, 'adri', 'prosia', '2023-05-29 07:00:00', '2023-05-30 07:00:00', 'cek server mati', 'pelayanan terhambat', 'berhasil up lg', 'SELESAI', 10),
+(5, 9, 1, 8, 4, 10, 'wewewewe', 'werwerwer', '2023-06-07 07:00:00', '2023-06-15 07:00:00', 'wetrerterert', 'erterter', 'rtyrtyer', 'PENDING', 23);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `vw_dash_kegiatan`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_dash_kegiatan` (
+`tahun` int(4)
+,`nama_kegiatan` varchar(250)
+,`jumlah` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `vw_kondisi_abnormal`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_kondisi_abnormal` (
+`tahun` int(4)
+,`jumlah` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `vw_kunjungan`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_kunjungan` (
+`tahun` int(4)
+,`jumlah` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `vw_status_pending`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_status_pending` (
+`tahun` int(4)
+,`jumlah` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `vw_tamu`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_tamu` (
+`tahun` int(4)
+,`count(nama_perusahaan)` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_dash_kegiatan`
+--
+DROP TABLE IF EXISTS `vw_dash_kegiatan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_dash_kegiatan`  AS SELECT year(`a`.`tanggal_mulai`) AS `tahun`, `b`.`nama_kegiatan` AS `nama_kegiatan`, count(`a`.`id_kegiatan`) AS `jumlah` FROM (`tx_kegiatan_piket` `a` join `ms_kegiatan` `b` on(`b`.`id` = `a`.`id_kegiatan`)) GROUP BY `b`.`nama_kegiatan``nama_kegiatan`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_kondisi_abnormal`
+--
+DROP TABLE IF EXISTS `vw_kondisi_abnormal`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kondisi_abnormal`  AS SELECT year(`tx_kegiatan_harian`.`tanggal`) AS `tahun`, count(`tx_kegiatan_harian`.`kondisi`) AS `jumlah` FROM `tx_kegiatan_harian` WHERE `tx_kegiatan_harian`.`kondisi` = 'ABNORMAL' GROUP BY year(`tx_kegiatan_harian`.`tanggal`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_kunjungan`
+--
+DROP TABLE IF EXISTS `vw_kunjungan`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kunjungan`  AS SELECT year(`tx_kegiatan_piket`.`tanggal_mulai`) AS `tahun`, count(0) AS `jumlah` FROM `tx_kegiatan_piket` GROUP BY year(`tx_kegiatan_piket`.`tanggal_mulai`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_status_pending`
+--
+DROP TABLE IF EXISTS `vw_status_pending`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_status_pending`  AS SELECT year(`tx_kegiatan_piket`.`tanggal_mulai`) AS `tahun`, count(`tx_kegiatan_piket`.`status`) AS `jumlah` FROM `tx_kegiatan_piket` WHERE `tx_kegiatan_piket`.`status` = 'PENDING' GROUP BY year(`tx_kegiatan_piket`.`tanggal_mulai`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_tamu`
+--
+DROP TABLE IF EXISTS `vw_tamu`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_tamu`  AS SELECT year(`tx_kegiatan_piket`.`tanggal_mulai`) AS `tahun`, count(`tx_kegiatan_piket`.`nama_perusahaan`) AS `count(nama_perusahaan)` FROM `tx_kegiatan_piket` GROUP BY `tx_kegiatan_piket`.`nama_perusahaan``nama_perusahaan`  ;
 
 --
 -- Indexes for dumped tables
@@ -248,6 +376,12 @@ ALTER TABLE `ms_users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `tx_kegiatan_harian`
+--
+ALTER TABLE `tx_kegiatan_harian`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `tx_kegiatan_piket`
 --
 ALTER TABLE `tx_kegiatan_piket`
@@ -261,7 +395,7 @@ ALTER TABLE `tx_kegiatan_piket`
 -- AUTO_INCREMENT untuk tabel `ms_data_center`
 --
 ALTER TABLE `ms_data_center`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `ms_item`
@@ -279,7 +413,7 @@ ALTER TABLE `ms_kegiatan`
 -- AUTO_INCREMENT untuk tabel `ms_ruangan`
 --
 ALTER TABLE `ms_ruangan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT untuk tabel `ms_struktur`
@@ -294,10 +428,16 @@ ALTER TABLE `ms_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
+-- AUTO_INCREMENT untuk tabel `tx_kegiatan_harian`
+--
+ALTER TABLE `tx_kegiatan_harian`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT untuk tabel `tx_kegiatan_piket`
 --
 ALTER TABLE `tx_kegiatan_piket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
