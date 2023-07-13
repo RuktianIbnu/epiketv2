@@ -127,3 +127,21 @@ type DashTamu struct {
 type DashKunjungan struct {
 	Jumlah int64 `json:"jumlah,omitempty"`
 }
+
+// Report Kegiatan Harian ...
+type TxReportPiketHarian struct {
+	ID               int64         `json:"id,omitempty"`
+	Tahun            string        `json:"tahun,omitempty"`
+	Bulan            string        `json:"bulan,omitempty"`
+	Tanggal          *time.Time    `json:"tanggal,omitempty"`
+	Jam              *time.Time    `json:"jam,omitempty"`
+	IdDataCenter     int64         `json:"id_data_center,omitempty"`
+	IdRuangan        int64         `json:"id_ruangan,omitempty"`
+	Kondisi          string        `json:"kondisi,omitempty"`
+	IdUser1          int64         `json:"id_user_1,omitempty"`
+	IdUser2          int64         `json:"id_user_2,omitempty"`
+	DetailDataCenter *MsDataCenter `json:"detail_dataCenter,omitempty"`
+	DetailRuangan    *MsRuangan    `json:"detail_ruangan,omitempty"`
+	DetailUser       *MsUser       `json:"detail_user,omitempty"`
+	DetailUserTwo    *MsUser       `json:"detail_user2,omitempty"`
+}

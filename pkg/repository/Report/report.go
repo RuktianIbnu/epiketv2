@@ -9,7 +9,7 @@ import (
 
 // Repository ...
 type Repository interface {
-	GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHarian, int, error)
+	GetAll(dqp *model.DefaultQueryParam) ([]*model.TxReportPiketHarian, error)
 }
 
 type repository struct {
@@ -23,13 +23,13 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHarian, int, error) {
+func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxReportPiketHarian, error) {
 	var (
-		list = make([]*model.TxPiketHarian, 0)
+		list = make([]*model.TxReportPiketHarian, 0)
 	)
 
-	query := `SELECT
-	a.id, a.tanggal, a.jam, a.id_data_center, a.id_ruangan, a.kondisi, a.id_user_1, a.id_user_2, c.nama_dc, c.lokasi, d.nama_ruangan, 
+	queryStart := `SELECT
+	a.id, year(a.tanggal) as tahun, month(a.tanggal) as bulan, a.tanggal, a.jam, a.id_data_center, a.id_ruangan, a.kondisi, a.id_user_1, a.id_user_2, c.nama_dc, c.lokasi, d.nama_ruangan, 
 	f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
 	g.nama as nama_user2, g.no_hp as no_hp_user2
 	FROM tx_kegiatan_harian as a
@@ -38,20 +38,25 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHaria
 	left join ms_users as f on f.id = a.id_user_1
 	left join ms_users as g on g.id = a.id_user_2`
 
-	if dqp.Search != "" {
-		query += ` WHERE `
+	if dqp.Params["tahun"] != "" {
+		queryStart += `	 where tahun =  :tahun`
+		if dqp.Params["bulan"] != "" {
+			queryStart += `	 and bulan =  :bulan`
+		}
+		if dqp.Params["tanggal_mulai"] != "" && dqp.Params["tanggal_selesai"] != "" {
+			queryStart += `	 and (tanggal BETWEEN :tanggal and :tanggal`
+		}
 	}
-	query += ` LIMIT :limit OFFSET :offset`
 
-	rows, err := m.DB.NamedQuery(m.DB.Rebind(query), dqp.Params)
+	rows, err := m.DB.NamedQuery(m.DB.Rebind(queryStart), dqp.Params)
 	if err != nil {
-		return nil, -1, err
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var (
-			data       model.TxPiketHarian
+			data       model.TxReportPiketHarian
 			dataCenter model.MsDataCenter
 			ruangan    model.MsRuangan
 			user       model.MsUser
@@ -60,6 +65,8 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHaria
 
 		if err := rows.Scan(
 			&data.ID,
+			&data.Tahun,
+			&data.Bulan,
 			&data.Tanggal,
 			&data.Jam,
 			&data.IdDataCenter,
@@ -77,7 +84,7 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHaria
 			&user2.Nama,
 			&user2.No_hp,
 		); err != nil {
-			return nil, -1, err
+			return nil, err
 		}
 		data.DetailDataCenter = &model.MsDataCenter{
 			ID:      dataCenter.ID,
@@ -104,5 +111,5 @@ func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxPiketHaria
 		list = append(list, &data)
 	}
 
-	return list, 0, nil
+	return list, nil
 }

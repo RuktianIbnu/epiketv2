@@ -1,12 +1,17 @@
 package router
 
 import (
+	"fmt"
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
 
 	dashboardHandler "epiketv2/http/handler/dashboard"
 	dcHandler "epiketv2/http/handler/data_center"
 	itemHandler "epiketv2/http/handler/item"
 	kegiatanHandler "epiketv2/http/handler/kegiatan"
+	rpt "epiketv2/http/handler/report"
 	ruanganHandler "epiketv2/http/handler/ruangan"
 	strukturHandler "epiketv2/http/handler/struktur"
 	txharianHandler "epiketv2/http/handler/tx_harian"
@@ -37,15 +42,17 @@ func Routes() *gin.Engine {
 	txpiketHandler := txpiketHandler.NewHandler()
 	txharianHandler := txharianHandler.NewHandler()
 	dashboardHandler := dashboardHandler.NewHandler()
+	reportHandler := rpt.NewHandler()
 
 	v1 := r.Group("/v1")
 	{
 		v1.POST("/login", userHandler.Login)
 		v1.POST("/register", userHandler.Register)
-		// v1.GET("/test-file", func(c *gin.Context) {
-		// 	log.Println("oke")
-		// 	c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")
-		// })
+		v1.GET("/report-indeks", reportHandler.GetReportHarian)
+		v1.GET("/test-file", func(c *gin.Context) {
+			log.Println("oke")
+			c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")
+		})
 
 		resources := v1.Group("/resources").Use(auth.Middleware())
 		{
