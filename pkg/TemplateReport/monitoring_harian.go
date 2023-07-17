@@ -4,17 +4,22 @@ import (
 	"epiketv2/pkg/model"
 	rr "epiketv2/pkg/repository/report"
 	"fmt"
+<<<<<<< HEAD
 	"os"
 	"strconv"
 	"time"
+=======
+"strconv"
+"strconv"
+"strconv"
 
-	"github.com/jung-kurt/gofpdf"
+	/ "strconv"
+>>>>>>> 31667813d6023502c92e9ae501635984c2f4260b
+
+"github.com/jug-kurt/gofpdf"
 )
 
-// Usecase ...
-type Usecase interface {
-	GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (string, error)
-}
+/
 
 type usecase struct {
 	reportRepo rr.Repository
@@ -79,7 +84,7 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.AddPage()
 
 	pdf.SetFont(baseFont, "B", 11)
-	pdf.CellFormat(200, cellHeight, "Laporan Monitoring Harian "+dqp.Params["tahun"].(string)+dqp.Params["bulan"].(string), "", 1, "CM", false, 0, "")
+	pdf.CellFormat(200, cellHeight, "Laporan Monitoring Harian ", "", 1, "CM", false, 0, "")
 
 	pdf.Ln(7)
 
@@ -87,6 +92,7 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.SetTextColor(255, 255, 255)
 
 	pdf.CellFormat(10, cellHeight*2, "No", "LTRB", 0, "CM", true, 0, "")
+<<<<<<< HEAD
 	pdf.CellFormat(125, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(20, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(20, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
@@ -141,10 +147,24 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.ImageOptions("output.png", 5, 0, 200, 0, true, imageOpt, 0, "")
 	directory := os.Getenv("EXP_PDF_PATH") + "/"
 	filenname := strconv.FormatInt(time.Now().Unix(), 10) + "_" + dqp.Params["kode"].(string) + ".pdf"
+=======
+	pdf.CellFormat(20, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(20, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Lokasi", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Ruangan", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
+
+	
+>>>>>>> 31667813d6023502c92e9ae501635984c2f4260b
 	urlName := directory + filenname
 	if err := pdf.OutputFileAndClose(urlName); err != nil {
 		return "", err
 	}
 
 	return filenname, nil
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 31667813d6023502c92e9ae501635984c2f4260b
