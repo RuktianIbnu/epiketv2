@@ -5,15 +5,15 @@ import (
 	rr "epiketv2/pkg/repository/report"
 	"fmt"
 "strconv"
-	"strconv"
 "strconv"
 "strconv"
-"trconv"
 
-// "strconv"
+	/ "strconv"
 
-github.com/jung-kurt/gofpdf"
+"github.com/jug-kurt/gofpdf"
+)
 
+/
 
 type usecase struct {
 	reportRepo rr.Repository
@@ -93,23 +93,11 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.CellFormat(40, cellHeight*2, "Ruangan", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
 
-	for i := 0; i < len(data); i++ {
-		if i%2 == 0 {30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
-
-	for i := ; i < len(data); i++ {
-		// if i%2 = 0 {
-		/ 	pdf.SetillColor(255, 255, 255)
-		// }else {
-		// 	df.SetFillColor(251, 228, 213)
-		/ }
-	// df.CellFormat(10, cellHeight, strconv.Itoa(i+1), "LTRB", 0, "CM", true, 0, "")
-		// df.CellFormat(125, celHeight, data[i].tanggal, "LTRB", 0, "LM", true, 0, "")
+	
+	urlName := directory + filenname
+	if err := pdf.OutputFileAndClose(urlName); err != nil {
+		return "", err
 	}
 
-	uName := "filenname.pdf"
-if err := pdf.OtputFileAndClose(urlName); err != nil {
-			eturn "", err
-	
-
-	return "filenname.pdf", nil
+	return filenname, nil
 }
