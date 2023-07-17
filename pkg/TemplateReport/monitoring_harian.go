@@ -4,16 +4,16 @@ import (
 	"epiketv2/pkg/model"
 	rr "epiketv2/pkg/repository/report"
 	"fmt"
+"strconv"
+	"strconv"
+"strconv"
+"strconv"
+"trconv"
 
-	// "strconv"
+// "strconv"
 
-	"github.com/jung-kurt/gofpdf"
-)
+github.com/jung-kurt/gofpdf"
 
-// Usecase ...
-type Usecase interface {
-	GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (string, error)
-}
 
 type usecase struct {
 	reportRepo rr.Repository
@@ -47,10 +47,10 @@ type ReportDataHarian struct {
 }
 
 func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (string, error) {
-	// data, err := m.reportRepo.GetAll(dqp)
-	// if err != nil {
-	// 	return "", err
-	// }
+	data, err := m.reportRepo.GetAll(dqp)
+	if err != nil {
+		return "", err
+	}
 
 	var (
 		baseFont   string = "Arial"
@@ -78,7 +78,7 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.AddPage()
 
 	pdf.SetFont(baseFont, "B", 11)
-	pdf.CellFormat(200, cellHeight, "Laporan Monitoring Harian "+dqp.Params["tahun"].(string)+dqp.Params["bulan"].(string), "", 1, "CM", false, 0, "")
+	pdf.CellFormat(200, cellHeight, "Laporan Monitoring Harian ", "", 1, "CM", false, 0, "")
 
 	pdf.Ln(7)
 
@@ -86,34 +86,30 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.SetTextColor(255, 255, 255)
 
 	pdf.CellFormat(10, cellHeight*2, "No", "LTRB", 0, "CM", true, 0, "")
-	pdf.CellFormat(10, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
-	// pdf.CellFormat(10, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
-	// pdf.CellFormat(20, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
-	// pdf.CellFormat(20, cellHeight*2, "Lokasi", "LTRB", 1, "CM", true, 0, "")
-	// pdf.CellFormat(20, cellHeight*2, "Ruangan", "LTRB", 1, "CM", true, 0, "")
-	// pdf.CellFormat(20, cellHeight*2, "Kondisi", "LTRB", 1, "CM", true, 0, "")
+	pdf.CellFormat(20, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(20, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Lokasi", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(40, cellHeight*2, "Ruangan", "LTRB", 0, "CM", true, 0, "")
+	pdf.CellFormat(30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
 
-	pdf.SetTextColor(0, 0, 0)
-	pdf.SetFont(baseFont, "", 9)
+	for i := 0; i < len(data); i++ {
+		if i%2 == 0 {30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
 
-	//table
-	// for i := 0; i < len(data); i++ {
-	// 	if i%2 == 0 {
-	// 		pdf.SetFillColor(255, 255, 255)
-	// 	} else {
-	// 		pdf.SetFillColor(251, 228, 213)
-	// 	}
-
-	// 	pdf.CellFormat(10, cellHeight, strconv.Itoa(i+1), "LTRB", 0, "CM", true, 0, "")
-	// 	pdf.CellFormat(10, cellHeight, data[i].Tanggal.String(), "LTRB", 0, "LM", true, 0, "")
-	// }
-
-	// pdf.ImageOptions("output.png", 5, 0, 200, 0, true, imageOpt, 0, "")
-	// filenname := strconv.FormatInt(time.Now().Unix(), 10) + "_" + dqp.Params["kode"].(string) + ".pdf"
-	urlName := "filenname.pdf"
-	if err := pdf.OutputFileAndClose(urlName); err != nil {
-		return "", err
+	for i := ; i < len(data); i++ {
+		// if i%2 = 0 {
+		/ 	pdf.SetillColor(255, 255, 255)
+		// }else {
+		// 	df.SetFillColor(251, 228, 213)
+		/ }
+	// df.CellFormat(10, cellHeight, strconv.Itoa(i+1), "LTRB", 0, "CM", true, 0, "")
+		// df.CellFormat(125, celHeight, data[i].tanggal, "LTRB", 0, "LM", true, 0, "")
 	}
+
+	uName := "filenname.pdf"
+if err := pdf.OtputFileAndClose(urlName); err != nil {
+			eturn "", err
+	
 
 	return "filenname.pdf", nil
 }
