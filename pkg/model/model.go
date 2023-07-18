@@ -145,3 +145,28 @@ type TxReportPiketHarian struct {
 	DetailUser       *MsUser       `json:"detail_user,omitempty"`
 	DetailUserTwo    *MsUser       `json:"detail_user2,omitempty"`
 }
+
+// Kegiatan Piket dc...
+type TxKegiatanPiketDc struct {
+	ID               int64         `json:"id,omitempty"`
+	IdKegiatan       int64         `json:"id_kegiatan,omitempty"`
+	IdDataCenter     int64         `json:"id_data_center,omitempty"`
+	IdRuangan        int64         `json:"id_ruangan,omitempty"`
+	IdItem           int64         `json:"id_item,omitempty"`
+	IdUsers          int64         `json:"id_users,omitempty"`
+	NamaPicVendor    string        `json:"nama_pic_vendor,omitempty"`
+	NamaPerusahaan   string        `json:"nama_perusahaan,omitempty"`
+	TanggalMulai     string        `json:"tanggal_mulai,omitempty"`
+	TanggalSelesai   string        `json:"tanggal_selesai,omitempty"`
+	Deskripsi        string        `json:"deskripsi,omitempty"`
+	Resiko           string        `json:"resiko,omitempty"`
+	Hasil            string        `json:"hasil,omitempty"`
+	Status           string        `json:"status,omitempty"`
+	IdUser2          int64         `json:"id_user_2,omitempty"`
+	DetailKegiatan   *MsKegiatan   `json:"detail_kegiatan,omitempty"`
+	DetailDataCenter *MsDataCenter `json:"detail_dataCenter,omitempty"`
+	DetailRuangan    *MsRuangan    `json:"detail_ruangan,omitempty"`
+	DetailItem       *MsItem       `json:"detail_item,omitempty"`
+	DetailUser       *MsUser       `json:"detail_user,omitempty"`
+	DetailUserTwo    *MsUser       `json:"detail_user2,omitempty"`
+}
