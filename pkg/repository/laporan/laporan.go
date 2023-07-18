@@ -10,7 +10,10 @@ import (
 // Repository ...
 type Repository interface {
 	GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error)
+<<<<<<< HEAD
 	GetKegiatanPiket(tahun int64, kode string) ([]*model.TxKegiatanPiketDc, error)
+=======
+>>>>>>> c35c2ed (+ pdf monitor harian dah rapih)
 }
 
 type repository struct {
@@ -24,6 +27,7 @@ func NewRepository() Repository {
 	}
 }
 
+<<<<<<< HEAD
 func (m *repository) GetKegiatanPiket(tahun int64, kode string) ([]*model.TxKegiatanPiketDc, error) {
 	var (
 		list = make([]*model.TxKegiatanPiketDc, 0)
@@ -139,6 +143,8 @@ func (m *repository) GetKegiatanPiket(tahun int64, kode string) ([]*model.TxKegi
 	return list, nil
 }
 
+=======
+>>>>>>> c35c2ed (+ pdf monitor harian dah rapih)
 func (m *repository) GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error) {
 	var (
 		list = make([]*model.TxReportPiketHarian, 0)
