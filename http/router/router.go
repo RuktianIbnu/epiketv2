@@ -48,7 +48,7 @@ func Routes() *gin.Engine {
 	{
 		v1.POST("/login", userHandler.Login)
 		v1.POST("/register", userHandler.Register)
-		v1.GET("/report-indeks", reportHandler.GetReportHarian)
+		v1.GET("/reportharian", reportHandler.GetReportHarian)
 		v1.GET("/test-file", func(c *gin.Context) {
 			log.Println("oke")
 			c.FileAttachment(fmt.Sprintf("%s/report.pdf", os.Getenv("EXP_PDF_PATH")), "report.pdf")

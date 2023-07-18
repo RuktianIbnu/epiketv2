@@ -6,7 +6,6 @@ import (
 	rpt "epiketv2/pkg/templatereport"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,11 +33,11 @@ func (m *handler) GetReportHarian(c *gin.Context) {
 			Ctx: c,
 		}
 		// showItem, _ = strconv.ParseBool(c.qe("showItem", "false"))
-		TanggalMulai   = c.Query("tanggal_mulai")
-		TanggalSelesai = c.Query("tanggal_selesai")
-		Tahun          = c.Query("tahun")
-		Bulan          = c.Query("bulan")
-		Kode           = c.Query("kode")
+		// TanggalMulai   = c.Query("tanggal_mulai")
+		// TanggalSelesai = c.Query("tanggal_selesai")
+		Tahun = c.Query("tahun")
+		// Bulan          = c.Query("bulan")
+		Kode = c.Query("kode")
 	)
 
 	dqp, err := dq.DefaultQueryParam()
@@ -47,16 +46,16 @@ func (m *handler) GetReportHarian(c *gin.Context) {
 		return
 	}
 
-	dqp.Params["tanggal_selesai"] = TanggalSelesai
-	dqp.Params["tanggal_mulai"] = TanggalMulai
+	// dqp.Params["tanggal_selesai"] = TanggalSelesai
+	// dqp.Params["tanggal_mulai"] = TanggalMulai
 	dqp.Params["tahun"] = Tahun
-	dqp.Params["bulan"] = Bulan
+	// dqp.Params["bulan"] = Bulan
 	dqp.Params["kode"] = Kode
-	fmt.Println("dqp.Params = ", dqp.Params)
+
 	list, err := m.reportPage.GetReportMonitoringHarian(dqp)
 	if err != nil {
 		c.JSON(resp.Format(http.StatusInternalServerError, err))
 		return
 	}
-	c.FileAttachment(fmt.Sprintf("%s/"+list, os.Getenv("EXP_PDF_PATH")), list)
+	c.FileAttachment(fmt.Sprintf("%s/"+list), list)
 }
