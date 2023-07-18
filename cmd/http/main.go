@@ -1,10 +1,10 @@
 package main
 
 import (
+	"epiketv2/http/router"
 	"fmt"
 	"log"
 	"os"
-	"sertifikasi_listrik/http/router"
 	"strings"
 
 	"github.com/joho/godotenv"

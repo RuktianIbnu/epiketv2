@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"sertifikasi_listrik/pkg/helper/jwt"
-	resp "sertifikasi_listrik/pkg/helper/response"
+	"epiketv2/pkg/helper/jwt"
+	resp "epiketv2/pkg/helper/response"
 
 	"github.com/gin-gonic/gin"
 )
