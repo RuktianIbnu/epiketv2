@@ -92,62 +92,6 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.SetTextColor(255, 255, 255)
 
 	pdf.CellFormat(10, cellHeight*2, "No", "LTRB", 0, "CM", true, 0, "")
-<<<<<<< HEAD
-	pdf.CellFormat(125, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
-	pdf.CellFormat(20, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
-	pdf.CellFormat(20, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
-	pdf.CellFormat(25, cellHeight*2, "Lokasi", "LTRB", 1, "CM", true, 0, "")
-	pdf.CellFormat(25, cellHeight*2, "Ruangan", "LTRB", 1, "CM", true, 0, "")
-	pdf.CellFormat(25, cellHeight*2, "Kondisi", "LTRB", 1, "CM", true, 0, "")
-
-	pdf.SetTextColor(0, 0, 0)
-	pdf.SetFont(baseFont, "", 9)
-
-	//table
-	for i := 0; i < len(data); i++ {
-		if i%2 == 0 {
-			pdf.SetFillColor(255, 255, 255)
-		} else {
-			pdf.SetFillColor(251, 228, 213)
-		}
-
-		pdf.CellFormat(10, cellHeight, strconv.Itoa(i+1), "LTRB", 0, "CM", true, 0, "")
-		pdf.CellFormat(10, cellHeight, data[i].Tanggal.String(), "LTRB", 0, "LM", true, 0, "")
-	}
-
-	pdf.Ln(7)
-
-	pdf.SetFont(baseFont, "B", 9)
-	pdf.SetDrawColor(71, 71, 71)
-
-	pdf.CellFormat(20, cellHeight, "Grade", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(25, cellHeight, "Keterangan", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(30, cellHeight, "Rentang Nilai", "LTRB", 1, "CM", false, 0, "")
-
-	pdf.SetFont(baseFont, "", 9)
-
-	pdf.CellFormat(20, cellHeight, "A", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(25, cellHeight, "Sangat Baik", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(30, cellHeight, "88.31 - 100", "LTRB", 1, "CM", false, 0, "")
-
-	pdf.CellFormat(20, cellHeight, "B", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(25, cellHeight, "Baik", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(30, cellHeight, "76.61 - 88.3", "LTRB", 1, "CM", false, 0, "")
-
-	pdf.CellFormat(20, cellHeight, "C", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(25, cellHeight, "Kurang Baik", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(30, cellHeight, "65 - 76.6", "LTRB", 1, "CM", false, 0, "")
-
-	pdf.CellFormat(20, cellHeight, "D", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(25, cellHeight, "Tidak Baik", "LTRB", 0, "CM", false, 0, "")
-	pdf.CellFormat(30, cellHeight, "25 - 64.99", "LTRB", 1, "CM", false, 0, "")
-
-	pdf.Ln(18)
-
-	pdf.ImageOptions("output.png", 5, 0, 200, 0, true, imageOpt, 0, "")
-	directory := os.Getenv("EXP_PDF_PATH") + "/"
-	filenname := strconv.FormatInt(time.Now().Unix(), 10) + "_" + dqp.Params["kode"].(string) + ".pdf"
-=======
 	pdf.CellFormat(20, cellHeight*2, "Tanggal", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(20, cellHeight*2, "Jam", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(40, cellHeight*2, "Data Center", "LTRB", 0, "CM", true, 0, "")
@@ -156,15 +100,10 @@ func (m *usecase) GetReportMonitoringHarian(dqp *model.DefaultQueryParam) (strin
 	pdf.CellFormat(30, cellHeight*2, "Kondisi", "LTRB", 0, "CM", true, 0, "")
 
 	
->>>>>>> 31667813d6023502c92e9ae501635984c2f4260b
 	urlName := directory + filenname
 	if err := pdf.OutputFileAndClose(urlName); err != nil {
 		return "", err
 	}
 
 	return filenname, nil
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 31667813d6023502c92e9ae501635984c2f4260b
