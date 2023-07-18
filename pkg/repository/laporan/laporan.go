@@ -1,4 +1,4 @@
-package report
+package laporan
 
 import (
 	"epiketv2/pkg/helper"
@@ -9,7 +9,7 @@ import (
 
 // Repository ...
 type Repository interface {
-	GetAll(dqp *model.DefaultQueryParam) ([]*model.TxReportPiketHarian, error)
+	GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error)
 }
 
 type repository struct {
@@ -23,32 +23,22 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) GetAll(dqp *model.DefaultQueryParam) ([]*model.TxReportPiketHarian, error) {
+func (m *repository) GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error) {
 	var (
 		list = make([]*model.TxReportPiketHarian, 0)
 	)
-
 	queryStart := `SELECT
-	a.id, year(a.tanggal) as tahun, month(a.tanggal) as bulan, a.tanggal, a.jam, a.id_data_center, a.id_ruangan, a.kondisi, a.id_user_1, a.id_user_2, c.nama_dc, c.lokasi, d.nama_ruangan, 
-	f.nip, f.nama, f.no_hp, g.nip as nip_user2, 
-	g.nama as nama_user2, g.no_hp as no_hp_user2
-	FROM tx_kegiatan_harian as a
-	left join ms_data_center as c on c.id = a.id_data_center
-	left join ms_ruangan as d on d.id = a.id_ruangan
-	left join ms_users as f on f.id = a.id_user_1
-	left join ms_users as g on g.id = a.id_user_2`
+	id, tahun, bulan, tanggal, jam, id_data_center, id_ruangan, kondisi, id_user_1, id_user_2, nama_dc, lokasi, nama_ruangan, 
+	nip, nama, no_hp, nip_user2, nama_user2, no_hp_user2
+	FROM vw_monitoring_harian`
 
-	if dqp.Params["tahun"] != "" {
-		queryStart += `	 where tahun =  :tahun`
-		if dqp.Params["bulan"] != "" {
-			queryStart += `	 and bulan =  :bulan`
-		}
-		if dqp.Params["tanggal_mulai"] != "" && dqp.Params["tanggal_selesai"] != "" {
-			queryStart += `	 and (tanggal BETWEEN :tanggal and :tanggal`
-		}
+	if tahun != 0 {
+		queryStart += ` WHERE tahun = :tahun`
 	}
 
-	rows, err := m.DB.NamedQuery(m.DB.Rebind(queryStart), dqp.Params)
+	rows, err := m.DB.NamedQuery(queryStart, map[string]interface{}{
+		"tahun": tahun,
+	})
 	if err != nil {
 		return nil, err
 	}

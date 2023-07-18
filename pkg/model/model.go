@@ -133,8 +133,8 @@ type TxReportPiketHarian struct {
 	ID               int64         `json:"id,omitempty"`
 	Tahun            string        `json:"tahun,omitempty"`
 	Bulan            string        `json:"bulan,omitempty"`
-	Tanggal          *time.Time    `json:"tanggal,omitempty"`
-	Jam              *time.Time    `json:"jam,omitempty"`
+	Tanggal          string        `json:"tanggal,omitempty"`
+	Jam              string        `json:"jam,omitempty"`
 	IdDataCenter     int64         `json:"id_data_center,omitempty"`
 	IdRuangan        int64         `json:"id_ruangan,omitempty"`
 	Kondisi          string        `json:"kondisi,omitempty"`
