@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Jul 2023 pada 11.10
+-- Waktu pembuatan: 18 Jul 2023 pada 18.14
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 8.1.12
 
@@ -200,7 +200,9 @@ INSERT INTO `tx_kegiatan_harian` (`id`, `tanggal`, `jam`, `id_data_center`, `id_
 (1, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'NORMAL', 10, 12),
 (3, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 1, 2, 'NORMAL', 10, 28),
 (5, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'ABNORMAL', 10, 12),
-(6, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'ABNORMAL', 10, 12);
+(6, '2023-07-03 07:00:00', '2023-07-03 07:00:00', 3, 12, 'ABNORMAL', 10, 12),
+(7, '2023-07-10 07:00:00', '2023-07-10 16:23:36', 1, 2, 'NORMAL', 10, 16),
+(8, '2023-07-10 07:00:00', '2023-07-10 16:23:54', 1, 9, 'NORMAL', 10, 16);
 
 -- --------------------------------------------------------
 
@@ -233,6 +235,43 @@ CREATE TABLE `tx_kegiatan_piket` (
 INSERT INTO `tx_kegiatan_piket` (`id`, `id_kegiatan`, `id_data_center`, `id_ruangan`, `id_item`, `id_users`, `nama_pic_vendor`, `nama_perusahaan`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `resiko`, `hasil`, `status`, `id_user_2`) VALUES
 (2, 5, 1, 9, 6, 12, 'adri', 'prosia', '2023-05-29 07:00:00', '2023-05-30 07:00:00', 'cek server mati', 'pelayanan terhambat', 'berhasil up lg', 'SELESAI', 10),
 (5, 9, 1, 8, 4, 10, 'wewewewe', 'werwerwer', '2023-06-07 07:00:00', '2023-06-15 07:00:00', 'wetrerterert', 'erterter', 'rtyrtyer', 'PENDING', 23);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in struktur untuk tampilan `view_kegiatan_dc`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `view_kegiatan_dc` (
+`id` int(11)
+,`id_kegiatan` int(11)
+,`id_data_center` int(11)
+,`id_ruangan` int(11)
+,`id_item` int(11)
+,`id_users` int(11)
+,`nama_pic_vendor` varchar(50)
+,`nama_perusahaan` varchar(200)
+,`tanggal_mulai` varchar(10)
+,`tanggal_selesai` varchar(10)
+,`deskripsi` text
+,`resiko` text
+,`hasil` text
+,`status` varchar(20)
+,`id_user_2` int(11)
+,`nama_kegiatan` varchar(250)
+,`deskripsi_kegiatan` text
+,`nama_dc` varchar(50)
+,`lokasi` varchar(50)
+,`nama_ruangan` varchar(50)
+,`nama_item` varchar(100)
+,`deskripsi_item` text
+,`nip` varchar(50)
+,`nama` varchar(50)
+,`no_hp` varchar(20)
+,`nip_user2` varchar(50)
+,`nama_user2` varchar(50)
+,`no_hp_user2` varchar(20)
+);
 
 -- --------------------------------------------------------
 
@@ -271,6 +310,34 @@ CREATE TABLE `vw_kunjungan` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in struktur untuk tampilan `vw_monitoring_harian`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+CREATE TABLE `vw_monitoring_harian` (
+`id` int(11)
+,`tahun` int(4)
+,`bulan` int(2)
+,`tanggal` varchar(10)
+,`jam` varchar(10)
+,`id_data_center` int(11)
+,`id_ruangan` int(11)
+,`kondisi` varchar(50)
+,`id_user_1` int(11)
+,`id_user_2` int(11)
+,`nama_dc` varchar(50)
+,`lokasi` varchar(50)
+,`nama_ruangan` varchar(50)
+,`nip` varchar(50)
+,`nama` varchar(50)
+,`no_hp` varchar(20)
+,`nip_user2` varchar(50)
+,`nama_user2` varchar(50)
+,`no_hp_user2` varchar(20)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in struktur untuk tampilan `vw_status_pending`
 -- (Lihat di bawah untuk tampilan aktual)
 --
@@ -289,6 +356,15 @@ CREATE TABLE `vw_tamu` (
 `tahun` int(4)
 ,`count(nama_perusahaan)` bigint(21)
 );
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `view_kegiatan_dc`
+--
+DROP TABLE IF EXISTS `view_kegiatan_dc`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_kegiatan_dc`  AS SELECT `a`.`id` AS `id`, `a`.`id_kegiatan` AS `id_kegiatan`, `a`.`id_data_center` AS `id_data_center`, `a`.`id_ruangan` AS `id_ruangan`, `a`.`id_item` AS `id_item`, `a`.`id_users` AS `id_users`, `a`.`nama_pic_vendor` AS `nama_pic_vendor`, `a`.`nama_perusahaan` AS `nama_perusahaan`, date_format(`a`.`tanggal_mulai`,'%d/%m/%Y') AS `tanggal_mulai`, date_format(`a`.`tanggal_selesai`,'%d/%m/%Y') AS `tanggal_selesai`, `a`.`deskripsi` AS `deskripsi`, `a`.`resiko` AS `resiko`, `a`.`hasil` AS `hasil`, `a`.`status` AS `status`, `a`.`id_user_2` AS `id_user_2`, coalesce(`b`.`nama_kegiatan`,0) AS `nama_kegiatan`, coalesce(`b`.`deskripsi`,0) AS `deskripsi_kegiatan`, `c`.`nama_dc` AS `nama_dc`, `c`.`lokasi` AS `lokasi`, `d`.`nama_ruangan` AS `nama_ruangan`, coalesce(`e`.`nama_item`,0) AS `nama_item`, coalesce(`e`.`deskripsi`,0) AS `deskripsi_item`, `f`.`nip` AS `nip`, `f`.`nama` AS `nama`, `f`.`no_hp` AS `no_hp`, `g`.`nip` AS `nip_user2`, `g`.`nama` AS `nama_user2`, `g`.`no_hp` AS `no_hp_user2` FROM ((((((`tx_kegiatan_piket` `a` left join `ms_kegiatan` `b` on(`b`.`id` = `a`.`id_kegiatan`)) left join `ms_data_center` `c` on(`c`.`id` = `a`.`id_data_center`)) left join `ms_ruangan` `d` on(`d`.`id` = `a`.`id_ruangan`)) left join `ms_item` `e` on(`e`.`id` = `a`.`id_item`)) left join `ms_users` `f` on(`f`.`id` = `a`.`id_users`)) left join `ms_users` `g` on(`g`.`id` = `a`.`id_user_2`))  ;
 
 -- --------------------------------------------------------
 
@@ -316,6 +392,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `vw_kunjungan`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kunjungan`  AS SELECT year(`tx_kegiatan_piket`.`tanggal_mulai`) AS `tahun`, count(0) AS `jumlah` FROM `tx_kegiatan_piket` GROUP BY year(`tx_kegiatan_piket`.`tanggal_mulai`)  ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `vw_monitoring_harian`
+--
+DROP TABLE IF EXISTS `vw_monitoring_harian`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_monitoring_harian`  AS SELECT `a`.`id` AS `id`, year(`a`.`tanggal`) AS `tahun`, month(`a`.`tanggal`) AS `bulan`, date_format(`a`.`tanggal`,'%d/%m/%Y') AS `tanggal`, date_format(`a`.`jam`,'%H:%i') AS `jam`, `a`.`id_data_center` AS `id_data_center`, `a`.`id_ruangan` AS `id_ruangan`, `a`.`kondisi` AS `kondisi`, `a`.`id_user_1` AS `id_user_1`, `a`.`id_user_2` AS `id_user_2`, `c`.`nama_dc` AS `nama_dc`, `c`.`lokasi` AS `lokasi`, `d`.`nama_ruangan` AS `nama_ruangan`, `f`.`nip` AS `nip`, `f`.`nama` AS `nama`, `f`.`no_hp` AS `no_hp`, `g`.`nip` AS `nip_user2`, `g`.`nama` AS `nama_user2`, `g`.`no_hp` AS `no_hp_user2` FROM ((((`tx_kegiatan_harian` `a` left join `ms_data_center` `c` on(`c`.`id` = `a`.`id_data_center`)) left join `ms_ruangan` `d` on(`d`.`id` = `a`.`id_ruangan`)) left join `ms_users` `f` on(`f`.`id` = `a`.`id_user_1`)) left join `ms_users` `g` on(`g`.`id` = `a`.`id_user_2`))  ;
 
 -- --------------------------------------------------------
 
@@ -431,7 +516,7 @@ ALTER TABLE `ms_users`
 -- AUTO_INCREMENT untuk tabel `tx_kegiatan_harian`
 --
 ALTER TABLE `tx_kegiatan_harian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `tx_kegiatan_piket`
