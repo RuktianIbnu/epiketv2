@@ -9,8 +9,8 @@ import (
 
 // Repository ...
 type Repository interface {
-	GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error)
-	GetReportKegiatanDc(tahun int64, kode string) ([]*model.TxReportKegiatanPiketDc, error)
+	GetAll(tahun, bulan, id_datacenter int64, tanggal string) ([]*model.TxReportPiketHarian, error)
+	GetReportKegiatanDc(tahun, bulan, id_datacenter int64, tanggal string) ([]*model.TxReportKegiatanPiketDc, error)
 }
 
 type repository struct {
@@ -24,7 +24,7 @@ func NewRepository() Repository {
 	}
 }
 
-func (m *repository) GetReportKegiatanDc(tahun int64, kode string) ([]*model.TxReportKegiatanPiketDc, error) {
+func (m *repository) GetReportKegiatanDc(tahun, bulan, id_datacenter int64, tanggal string) ([]*model.TxReportKegiatanPiketDc, error) {
 	var (
 		list = make([]*model.TxReportKegiatanPiketDc, 0)
 	)
@@ -34,12 +34,12 @@ func (m *repository) GetReportKegiatanDc(tahun int64, kode string) ([]*model.TxR
 	lokasi, nama_ruangan, nama_item, deskripsi_item, nip, nama, no_hp, nip_user2, nama_user2, no_hp_user2 
 	from vw_kegiatan_dc`
 
-	if tahun != 0 {
-		queryStart += ` WHERE tahun = :tahun`
+	if tanggal != "" {
+		queryStart += ` WHERE tanggal_mulai = :tanggal`
 	}
 
 	rows, err := m.DB.NamedQuery(queryStart, map[string]interface{}{
-		"tahun": tahun,
+		"tanggal": tanggal,
 	})
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (m *repository) GetReportKegiatanDc(tahun int64, kode string) ([]*model.TxR
 	return list, nil
 }
 
-func (m *repository) GetAll(tahun int64, kode string) ([]*model.TxReportPiketHarian, error) {
+func (m *repository) GetAll(tahun, bulan, id_datacenter int64, tanggal string) ([]*model.TxReportPiketHarian, error) {
 	var (
 		list = make([]*model.TxReportPiketHarian, 0)
 	)
@@ -139,10 +139,18 @@ func (m *repository) GetAll(tahun int64, kode string) ([]*model.TxReportPiketHar
 
 	if tahun != 0 {
 		queryStart += ` WHERE tahun = :tahun`
+		if bulan != 0 {
+			queryStart += ` and bulan = :bulan`
+			if id_datacenter != 0 {
+				queryStart += ` and id_data_center = :id_datacenter`
+			}
+		}
 	}
 
 	rows, err := m.DB.NamedQuery(queryStart, map[string]interface{}{
-		"tahun": tahun,
+		"tahun":         tahun,
+		"bulan":         bulan,
+		"id_datacenter": id_datacenter,
 	})
 	if err != nil {
 		return nil, err
