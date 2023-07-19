@@ -45,6 +45,7 @@ func Routes() *gin.Engine {
 		v1.POST("/login", userHandler.Login)
 		v1.POST("/register", userHandler.Register)
 		v1.POST("/laporan_harian", reportHandler.GetReportHarian)
+		v1.POST("/laporan_kegiatan", reportHandler.GetReportKegiatanDc)
 
 		resources := v1.Group("/resources").Use(auth.Middleware())
 		{

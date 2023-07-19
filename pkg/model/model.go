@@ -147,7 +147,7 @@ type TxReportPiketHarian struct {
 }
 
 // Kegiatan Piket dc...
-type TxKegiatanPiketDc struct {
+type TxReportKegiatanPiketDc struct {
 	ID               int64         `json:"id,omitempty"`
 	IdKegiatan       int64         `json:"id_kegiatan,omitempty"`
 	IdDataCenter     int64         `json:"id_data_center,omitempty"`
