@@ -13,9 +13,9 @@ import (
 
 // Usecase ...
 type Usecase interface {
-	GetReportMonitoringHarian(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
-	GetReportKegiatanDc(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
-	GetReportKunjungan(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
+	GetLaporanHarian(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
+	GetLaporanKegiatan(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
+	GetLaporanKunjungan(tahun, bulan, id_datacenter int64, tanggal string) (string, error)
 }
 
 type usecase struct {
@@ -47,7 +47,7 @@ type ReportDataHarian struct {
 	NamaPetugas2 string
 }
 
-func (m *usecase) GetReportKunjungan(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
+func (m *usecase) GetLaporanKunjungan(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
 	dataKegiatan, err := m.reportRepo.GetReportKegiatanDc(tahun, bulan, id_datacenter, tanggal)
 	if err != nil {
 		return "", err
@@ -123,7 +123,7 @@ func (m *usecase) GetReportKunjungan(tahun, bulan, id_datacenter int64, tanggal 
 	return "filenname_kunjungan.pdf", nil
 }
 
-func (m *usecase) GetReportKegiatanDc(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
+func (m *usecase) GetLaporanKegiatan(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
 	dataKegiatan, err := m.reportRepo.GetReportKegiatanDc(tahun, bulan, id_datacenter, tanggal)
 	if err != nil {
 		return "", err
@@ -169,7 +169,7 @@ func (m *usecase) GetReportKegiatanDc(tahun, bulan, id_datacenter int64, tanggal
 	return "filenname_kegiatan.pdf", nil
 }
 
-func (m *usecase) GetReportMonitoringHarian(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
+func (m *usecase) GetLaporanHarian(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
 	data, err := m.reportRepo.GetAll(tahun, bulan, id_datacenter, tanggal)
 	if err != nil {
 		return "", err
