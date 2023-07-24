@@ -48,7 +48,7 @@ type ReportDataHarian struct {
 }
 
 func (m *usecase) GetLaporanKunjungan(tahun, bulan, id_datacenter int64, tanggal string) (string, error) {
-	dataKegiatan, err := m.reportRepo.GetReportKegiatanDc(tahun, bulan, id_datacenter, tanggal)
+	dataKegiatan, err := m.reportRepo.GetReportKunjungan(tahun, bulan, id_datacenter, tanggal)
 	if err != nil {
 		return "", err
 	}
@@ -77,7 +77,11 @@ func (m *usecase) GetLaporanKunjungan(tahun, bulan, id_datacenter int64, tanggal
 
 	pdf.SetFont(baseFont, "B", 11)
 	pdf.CellFormat(200, cellHeight, "Laporan Kunjungan Data Center", "", 1, "CM", false, 0, "")
-	pdf.CellFormat(200, cellHeight, "Tahun : "+strconv.Itoa(int(tahun)), "", 1, "CM", false, 0, "")
+	if bulan != 0 {
+		pdf.CellFormat(200, cellHeight, "Tahun : "+strconv.FormatInt(tahun, 10)+" bulan :"+strconv.FormatInt(bulan, 10), "", 1, "CM", false, 0, "")
+	} else {
+		pdf.CellFormat(200, cellHeight, "Tahun : "+strconv.FormatInt(tahun, 10), "", 1, "CM", false, 0, "")
+	}
 
 	pdf.CellFormat(10, cellHeight*2, "No", "LTRB", 0, "CM", true, 0, "")
 	pdf.CellFormat(25, cellHeight*2, "Tanggal", "LTRB", 0, "LM", true, 0, "")
@@ -94,20 +98,9 @@ func (m *usecase) GetLaporanKunjungan(tahun, bulan, id_datacenter int64, tanggal
 		} else {
 			pdf.SetFillColor(251, 228, 213)
 		}
-
-		// colWidth := 30.0
-		// lineHeight := 5.5
-
-		// text := dataKegiatan[i].DetailDataCenter.Nama_dc
-		// words := pdf.SplitLines([]byte(text), colWidth)
-
 		pdf.CellFormat(10, cellHeight, strconv.Itoa(i+1), "LTRB", 0, "CM", true, 0, "")
 		pdf.CellFormat(25, cellHeight, dataKegiatan[i].TanggalMulai, "LTRB", 0, "LM", true, 0, "")
 		pdf.CellFormat(40, cellHeight, dataKegiatan[i].DetailDataCenter.Nama_dc, "LTRB", 0, "LM", true, 0, "")
-		// for _, line := range words {
-		// 	pdf.CellFormat(colWidth, lineHeight, string(line), "", 0, "LM", false, 0, "")
-		// 	pdf.Ln(lineHeight)
-		// }
 		pdf.CellFormat(40, cellHeight, dataKegiatan[i].NamaPerusahaan, "LTRB", 0, "LM", true, 0, "")
 		pdf.CellFormat(45, cellHeight, dataKegiatan[i].NamaPicVendor, "LTRB", 0, "LM", true, 0, "")
 		pdf.CellFormat(40, cellHeight, dataKegiatan[i].DetailKegiatan.Nama_kegiatan, "LTRB", 0, "LM", true, 0, "")
@@ -157,8 +150,41 @@ func (m *usecase) GetLaporanKegiatan(tahun, bulan, id_datacenter int64, tanggal 
 
 	pdf.Ln(7)
 
-	pdf.SetFont(baseFont, "B", 9.5)
-	pdf.SetTextColor(255, 255, 255)
+	// pdf.SetFont(baseFont, "B", 9.5)
+	// pdf.SetTextColor(0, 0, 0)
+
+	pdf.CellFormat(200, cellHeight, "Kegiatan : "+dataKegiatan[0].DetailKegiatan.Nama_kegiatan, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(200, cellHeight, "Pelaksana kegiatan : "+dataKegiatan[0].NamaPicVendor+" dari perusahaan/instansi : "+dataKegiatan[0].NamaPerusahaan, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(200, cellHeight, "Deskripsi kegiatan : "+dataKegiatan[0].Deskripsi, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(200, cellHeight, "Resiko kegiatan apabila gagal : "+dataKegiatan[0].Resiko, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(200, cellHeight, "Hasil kegiatan : "+dataKegiatan[0].Hasil, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(200, cellHeight, "Status Kegiatan : "+dataKegiatan[0].Status, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.CellFormat(50, cellHeight, "Petugas 1", "", 0, "LM", false, 0, "")
+	pdf.CellFormat(75, cellHeight, "", "", 0, "LM", false, 0, "")
+	pdf.CellFormat(50, cellHeight, "Petugas 2", "", 0, "LM", false, 0, "")
+	pdf.Ln(-7)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+	pdf.CellFormat(50, cellHeight, dataKegiatan[0].DetailUser.Nama, "", 0, "LM", false, 0, "")
+	pdf.CellFormat(75, cellHeight, "", "", 0, "LM", false, 0, "")
+	pdf.CellFormat(50, cellHeight, dataKegiatan[0].DetailUserTwo.Nama, "", 0, "LM", false, 0, "")
+	pdf.Ln(-1)
+	pdf.CellFormat(50, cellHeight, "NIP : "+dataKegiatan[0].DetailUser.Nip, "", 0, "LM", false, 0, "")
+	pdf.CellFormat(75, cellHeight, "", "", 0, "LM", false, 0, "")
+	pdf.CellFormat(50, cellHeight, "NIP : "+dataKegiatan[0].DetailUserTwo.Nip, "", 0, "LM", false, 0, "")
 
 	directory := os.Getenv("EXP_PDF_PATH") + "/"
 	urlName := directory + "filenname_kegiatan.pdf"
